@@ -1,69 +1,274 @@
-import Image from "next/image";
+import Link from "next/link";
+import { LINKS } from "@/lib/links";
+import { ConnectButton } from "@/components/ConnectButton";
+import { PrismMark, Tri } from "@/components/Logo";
+import { ArrowIcon, CopyIcon, TelegramIcon, XIcon } from "@/components/Icons";
+import { DashboardPhone, MintPhone, PhoneDefs } from "@/components/Phone";
+import { HeroBackdrop } from "@/components/HeroBackdrop";
+
+function Header() {
+  return (
+    <header className="lp-header">
+      <Link href="/" className="flex items-center gap-2.5" aria-label="Prism home">
+        <PrismMark size={44} />
+        <span className="lp-wordmark text-[26px]">prism</span>
+      </Link>
+      <nav className="flex items-center gap-1.5">
+        <a href={LINKS.x} target="_blank" rel="noreferrer" aria-label="Prism on X" className="lp-icon-button">
+          <XIcon />
+        </a>
+        <a href={LINKS.telegram} target="_blank" rel="noreferrer" aria-label="Prism on Telegram" className="lp-icon-button">
+          <TelegramIcon />
+        </a>
+        <Link href={LINKS.docs} className="lp-small ml-1 hidden px-3 py-2 font-medium sm:block">
+          Docs
+        </Link>
+        <Link href={LINKS.app} className="lp-small hidden px-3 py-2 font-medium sm:block">
+          Log in
+        </Link>
+        <ConnectButton className="lp-pill lp-pill-sm lp-pill-ink" label="Get started" />
+      </nav>
+    </header>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="lp-section lp-hero lp-glass" data-hero="true">
+      <HeroBackdrop />
+      <div className="lp-col lp-col-left order-1">
+        <h1 className="lp-display">Buy an idea, not a spreadsheet.</h1>
+      </div>
+      <div className="lp-portal order-2">
+        <DashboardPhone />
+      </div>
+      <div className="lp-col lp-col-right order-3 flex flex-col items-start gap-6">
+        <div className="flex w-full max-w-sm flex-col gap-6">
+          <p className="lp-body lp-muted">
+            Buy pSEMI, hold eight semiconductor names. Buy pMETL, hold silver and friends. Real tokenized assets, in
+            your own wallet.
+          </p>
+          <Link href="/app" className="lp-pill lp-pill-ink self-center">
+            Get started
+          </Link>
+        </div>
+        <p className="lp-small lp-muted">Mint or redeem any time. No broker, no eight tickers to babysit.</p>
+      </div>
+    </section>
+  );
+}
+
+function MintRedeem() {
+  return (
+    <div className="lp-panel-wrap">
+      <section className="lp-section lp-panel">
+        <div className="lp-col lp-col-left order-1">
+          <h2 className="lp-head">
+            Mint the basket.
+            <br />
+            <span className="lp-muted">Redeem the basket.</span>
+          </h2>
+        </div>
+        <div className="lp-portal order-2">
+          <MintPhone />
+        </div>
+        <div className="lp-col lp-col-right order-3 flex flex-col items-start gap-6">
+          <p className="lp-body max-w-sm">
+            Anyone can mint by delivering the basket and redeem back into it. If the token trades above what it holds,
+            minting is profitable. Below, redeeming is. Arbitrage drags price to NAV — the peg is defended by everyone
+            who wants free money, not by us.
+          </p>
+          <Link href="/app" className="lp-pill lp-pill-surface">
+            See how it works <ArrowIcon />
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+const INDEXES = [
+  { name: "SEMIS", ticker: "pSEMI", a: "8 names", b: "rebalanced monthly", color: "#7be372" },
+  { name: "METALS", ticker: "pMETL", a: "3 names", b: "silver-led", color: "#ffffff", stroke: "#394938" },
+  { name: "DEGEN", ticker: "pDGEN", a: "12 names", b: "hardest caps", color: "#394938" },
+];
+
+function Indexes() {
+  return (
+    <section className="lp-section lp-cards">
+      <div className="lp-col lp-cards-head">
+        <div className="max-w-xl">
+          <h2 className="lp-head">
+            Three indexes.
+            <br />
+            <span className="lp-muted">One token each.</span>
+          </h2>
+        </div>
+        <div className="flex max-w-sm flex-col items-start gap-6">
+          <p className="lp-body lp-muted">
+            Pick the theme. Prism holds the names, keeps the weights, and rebalances inside a band so it never trades
+            every wiggle.
+          </p>
+          <Link href="/app" className="lp-pill lp-pill-ink">
+            See every index <ArrowIcon />
+          </Link>
+        </div>
+      </div>
+      <ul className="lp-col lp-grid">
+        {INDEXES.map((ix) => (
+          <li key={ix.name} className="lp-tile">
+            <div className="lp-art lp-art-field">
+              <Tri className="lp-art-icon" color={ix.color} stroke={ix.stroke} />
+              <span className="lp-art-tag lp-art-tag-mono">{ix.ticker}</span>
+            </div>
+            <p className="lp-caption">
+              {ix.name}{" "}
+              <span className="lp-muted">
+                {ix.a} · {ix.b}
+              </span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+const PRICING = [
+  {
+    figure: "Oracle-priced",
+    note: "Every leg is marked from a live feed — tokenized equities, silver and memecoins alike — so NAV is a number, not a guess.",
+  },
+  {
+    figure: "Paused, not guessed",
+    note: "Equities close at the bell and silver closes for the weekend. When a leg goes stale, mint and redeem pause for that basket instead of inventing a price.",
+  },
+  {
+    figure: "Capped per asset",
+    note: "No single name can swallow a basket. Weights are capped and pulled back inside a band when they drift.",
+  },
+];
+
+function Pricing() {
+  return (
+    <div className="lp-on-field">
+      <section className="lp-section lp-cards">
+        <div className="lp-col lp-cards-head">
+          <h2 className="lp-head max-w-xl">
+            Priced honestly,
+            <br />
+            <span className="lp-muted">even when half the market is asleep.</span>
+          </h2>
+          <p className="lp-body lp-muted max-w-sm">
+            Equities close. Silver closes. Memecoins never sleep. Prism prices each leg from an oracle and refuses to
+            quote a basket while any leg is stale.
+          </p>
+        </div>
+        <ul className="lp-col lp-grid">
+          {PRICING.map((t) => (
+            <li key={t.figure} className="lp-tile">
+              <div className="lp-art lp-art-surface lp-art-stat">
+                <span className="lp-figure">{t.figure}</span>
+                <span className="lp-note">{t.note}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  );
+}
+
+const STATS = [
+  { figure: "1", note: "token holds the whole theme, weighted and rebalanced" },
+  { figure: "3", note: "indexes — semis, metals, degen" },
+  { figure: "0", note: "tickers to babysit — a wallet is the whole of it" },
+];
+
+function Closing() {
+  return (
+    <div className="lp-on-night">
+      <section className="lp-section lp-cards lp-closing">
+        <div className="lp-col lp-cards-head">
+          <h2 className="lp-head max-w-xl">
+            Buy an idea,
+            <br />
+            <span className="lp-muted">not a spreadsheet.</span>
+          </h2>
+        </div>
+        <ul className="lp-col lp-grid lp-grid-4">
+          {STATS.map((s) => (
+            <li key={s.figure} className="lp-tile">
+              <div className="lp-art lp-art-outline">
+                <span className="lp-figure">{s.figure}</span>
+                <span className="lp-note">{s.note}</span>
+              </div>
+            </li>
+          ))}
+          <li className="lp-tile">
+            <Link href="/app" className="lp-art lp-art-cta">
+              <span className="lp-figure">Get started</span>
+              <span className="lp-arrow">
+                <ArrowIcon size={32} />
+              </span>
+            </Link>
+          </li>
+        </ul>
+
+        <footer className="lp-col lp-footer">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2.5">
+              <PrismMark size={40} ink="#ffffff" fill="rgba(255,255,255,0.12)" />
+              <span className="lp-wordmark text-[24px]">prism</span>
+            </div>
+            <p className="lp-small lp-muted max-w-md">
+              Prices go down as well as up. Index tokens track the NAV of their underlying basket.
+            </p>
+            <span
+              title="0x80ba…9136"
+              className="flex w-fit items-center gap-2.5 rounded-full border border-white/15 py-1.5 pr-2.5 pl-3.5"
+            >
+              <span className="shrink-0 text-[13px] font-medium text-white">$PRISM</span>
+              <span className="font-mono text-[12px] whitespace-nowrap text-white/60">0x80ba…9136</span>
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-full text-white/55">
+                <CopyIcon />
+              </span>
+            </span>
+          </div>
+          <div className="flex flex-col items-start gap-5 lg:items-end">
+            <div className="flex items-center gap-1.5">
+              <a href={LINKS.x} target="_blank" rel="noreferrer" aria-label="Prism on X" className="lp-icon-button">
+                <XIcon />
+              </a>
+              <a href={LINKS.telegram} target="_blank" rel="noreferrer" aria-label="Prism on Telegram" className="lp-icon-button">
+                <TelegramIcon />
+              </a>
+            </div>
+            <nav className="lp-small flex flex-wrap gap-x-6 gap-y-2 lg:justify-end">
+              <Link href={LINKS.app}>Indexes</Link>
+              <Link href={LINKS.docs}>Docs</Link>
+              <Link href="/whitepaper">Whitepaper</Link>
+              <Link href={LINKS.blog}>Blog</Link>
+              <Link href={LINKS.terms}>Terms</Link>
+              <Link href={LINKS.privacy}>Privacy</Link>
+            </nav>
+          </div>
+        </footer>
+      </section>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="lp flex-1 overflow-x-clip">
+      <PhoneDefs />
+      <Header />
+      <Hero />
+      <MintRedeem />
+      <Indexes />
+      <Pricing />
+      <Closing />
+    </main>
   );
 }

@@ -6,14 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "chain": "~/.foundry/bin/anvil --chain-id 31337 --port ${ANVIL_PORT:-8545}",
+    "deploy:local": "cd contracts && ~/.foundry/bin/forge script script/Deploy.s.sol --rpc-url ${RPC_URL:-http://127.0.0.1:8545} --broadcast --slow && cd .. && node scripts/sync-abi.mjs",
+    "abi:sync": "node scripts/sync-abi.mjs",
+    "contracts:build": "cd contracts && ~/.foundry/bin/forge build",
+    "contracts:test": "cd contracts && ~/.foundry/bin/forge test -vvv",
+    "keeper": "node scripts/keeper.mjs",
+    "keeper:rebalance": "node scripts/keeper.mjs --rebalance",
+    "deploy:check": "cd contracts && ~/.foundry/bin/forge script script/DeployProduction.s.sol --sig 'check()' --rpc-url ${RPC_URL:?set RPC_URL}",
+    "deploy:production": "cd contracts && ~/.foundry/bin/forge script script/DeployProduction.s.sol --rpc-url ${RPC_URL:?set RPC_URL} --broadcast --slow && cd .. && DEPLOYMENT=production node scripts/sync-abi.mjs",
+    "contracts:sizes": "cd contracts && ~/.foundry/bin/forge build --sizes",
+    "test:e2e": "bash scripts/e2e.sh"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.102.8",
     "next": "16.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "viem": "^2.56.3",
+    "wagmi": "^3.7.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
