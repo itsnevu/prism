@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Schibsted_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
@@ -34,7 +35,9 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+// Typed explicitly rather than with Next's generated `LayoutProps`: that global only exists once
+// `next build` has written .next/types, so relying on it makes `tsc` fail on a clean checkout.
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
