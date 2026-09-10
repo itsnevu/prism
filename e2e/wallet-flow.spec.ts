@@ -72,26 +72,29 @@ async function waitForQuote(scope: ReturnType<typeof card>) {
 }
 
 /**
- * Click a submit button and wait for the transaction to run its course.
+ * Click a submit button and wait for the transaction to actually change something.
  *
- * The forms re-render on a 6s poll, so a click can land on a node React is about to replace and
- * quietly do nothing. Waiting only for the busy state to *clear* would pass in exactly that case,
- * so wait for it to appear first, and retry the click if it never does.
+ * Waiting for the "Confirming…" state to appear is unreliable: on a fast chain the transaction can
+ * come and go between polls, and on a slow runner the click can land on a node React is about to
+ * replace and quietly do nothing. Both look identical from the outside. So this waits on the
+ * *effect* instead, and only clicks again if nothing happened at all.
  */
-async function submitAndSettle(scope: ReturnType<typeof card>, name: RegExp) {
-  const busy = scope.getByRole("button", { name: /Confirming…|Sign in wallet…/ });
-
-  for (let attempt = 0; attempt < 3; attempt++) {
+async function submitUntil(
+  scope: ReturnType<typeof card>,
+  name: RegExp,
+  landed: () => Promise<boolean>,
+  attempts = 3,
+) {
+  for (let attempt = 0; attempt < attempts; attempt++) {
     await scope.getByRole("button", { name }).click();
-    try {
-      await expect(busy).toHaveCount(1, { timeout: 5_000 });
-      await expect(busy).toHaveCount(0, { timeout: 30_000 });
-      return;
-    } catch {
-      // the click did not start a transaction — the button was swapped out from under it
+
+    const deadline = Date.now() + 30_000;
+    while (Date.now() < deadline) {
+      if (await landed()) return;
+      await new Promise((resolve) => setTimeout(resolve, 400));
     }
   }
-  throw new Error(`clicking ${name} never started a transaction`);
+  throw new Error(`clicking ${name} never took effect`);
 }
 
 /**
@@ -141,11 +144,11 @@ test("buying an index with USDG works end to end in the browser", async ({ page 
   await waitForQuote(semis);
 
   await approveIfNeeded(semis, "Approve USDG", /^Buy pSEMI with USDG$/);
-  await submitAndSettle(semis, /^Buy pSEMI with USDG$/);
-
-  await expect
-    .poll(async () => (await tokenBalance(deployment.pSEMI.token)) > before, { timeout: 30_000 })
-    .toBe(true);
+  await submitUntil(
+    semis,
+    /^Buy pSEMI with USDG$/,
+    async () => (await tokenBalance(deployment.pSEMI.token)) > before,
+  );
 
   // 250 USDG at a NAV near $238 buys about one token — assert the magnitude, not a number that
   // would break the moment the seeded price changes.
@@ -167,11 +170,11 @@ test("selling back to USDG works end to end in the browser", async ({ page }) =>
   await waitForQuote(semis);
 
   const usdgBefore = await tokenBalance(deployment.usdg);
-  await submitAndSettle(semis, /^Sell pSEMI for USDG$/);
-
-  await expect
-    .poll(async () => (await tokenBalance(deployment.pSEMI.token)) < held, { timeout: 30_000 })
-    .toBe(true);
+  await submitUntil(
+    semis,
+    /^Sell pSEMI for USDG$/,
+    async () => (await tokenBalance(deployment.pSEMI.token)) < held,
+  );
   expect(await tokenBalance(deployment.usdg)).toBeGreaterThan(usdgBefore);
 });
 
@@ -194,11 +197,7 @@ test("minting by delivering the basket walks through the per-leg approvals", asy
   }
 
   await expect(metals.getByRole("button", { name: /^Mint / })).toBeEnabled({ timeout: 30_000 });
-  await submitAndSettle(metals, /^Mint /);
-
-  await expect
-    .poll(async () => (await tokenBalance(deployment.pMETL.token)) > before, { timeout: 30_000 })
-    .toBe(true);
+  await submitUntil(metals, /^Mint /, async () => (await tokenBalance(deployment.pMETL.token)) > before);
 });
 
 test("a stale leg pauses the index instead of quoting a guess", async ({ page }) => {
