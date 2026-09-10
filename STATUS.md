@@ -70,6 +70,7 @@ Juga: `scripts/e2e.sh` sekarang ikut membunuh server di port 3100 saat keluar. S
 - **`LICENSE` (MIT)** ditambahkan, cocok dengan header SPDX di `contracts/`.
 - **CI** (`.github/workflows/ci.yml`): tiga job — kontrak (build + 62 test), web (tsc/eslint/build), dan browser (11 test Playwright). Supaya jalan di runner, resolusi binary Foundry dipindah ke `scripts/foundry.sh` (PATH → `$FOUNDRY_BIN` → `~/.foundry/bin`); sebelumnya semua script npm menunjuk `~/.foundry/bin` yang tidak ada di CI.
 - **`og:image`** — `src/app/opengraph-image.tsx`, digambar dari geometri brand sendiri tanpa fetch webfont, jadi build tidak bergantung pada Google Fonts hidup.
+- **CI hijau** — dan langsung menemukan dua hal yang tidak pernah muncul di lokal: `layout.tsx` memakai `LayoutProps<"/">`, tipe global Next yang baru ada setelah `next build`, jadi `tsc` gagal di clone bersih (sekarang diketik eksplisit, diverifikasi dengan `.next` dihapus); dan test "sell" menunggu state "Confirming…" sempat terlihat — tidak teramati baik di chain cepat maupun runner lambat. Sekarang menunggu **hasilnya** (saldo on-chain berubah), yang juga memangkas suite dari 46 dtk jadi 17 dtk.
 - Alamat kontak dipusatkan ke `CONTACT_EMAIL` di `links.ts` dan dijadikan `mailto:` di Terms/Privacy. **Pastikan `support@prism.capital` benar-benar ada sebelum situs dipublikasikan.**
 
 ## Pass desain: permukaan
