@@ -118,7 +118,7 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
       : `${fmtNum(expected, usdgDecimals, 2)} USDG`;
 
   return (
-    <div className="rounded-[28px] border border-line bg-white p-5">
+    <div className="surface rounded-[28px] border border-line p-5">
       <div className="flex items-center justify-between gap-2">
         <div className="flex gap-1.5">
           {(["buy", "sell"] as Side[]).map((s) => (
@@ -147,7 +147,7 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
         <span className="text-[10.5px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
           {side === "buy" ? "USDG to spend" : `${ix.symbol} to sell`}
         </span>
-        <div className="mt-1.5 flex items-center justify-between rounded-2xl border border-line bg-field px-4 py-3">
+        <div className="surface-inset mt-1.5 flex items-center justify-between rounded-2xl px-4 py-3 focus-within:ring-2 focus-within:ring-ink/15">
           <input
             inputMode="decimal"
             value={raw}
@@ -182,7 +182,7 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
         </span>
       </div>
 
-      <div className="mt-4 rounded-2xl bg-field px-4 py-3">
+      <div className="surface-inset mt-4 rounded-2xl px-4 py-3">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
           <span className="text-[10.5px] font-semibold tracking-[0.12em] whitespace-nowrap uppercase text-ink-faint">
             You receive ≈

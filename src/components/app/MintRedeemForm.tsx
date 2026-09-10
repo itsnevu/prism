@@ -88,7 +88,7 @@ export function MintRedeemForm({ ix, userBalance }: { ix: IndexView; userBalance
   const canRedeem = (userBalance ?? 0n) >= amount && amount > 0n;
 
   return (
-    <div className="rounded-[28px] border border-line bg-white p-5">
+    <div className="surface rounded-[28px] border border-line p-5">
       <div className="flex gap-1.5">
         {(["mint", "redeem"] as Mode[]).map((m) => (
           <button
@@ -109,7 +109,7 @@ export function MintRedeemForm({ ix, userBalance }: { ix: IndexView; userBalance
         <span className="text-[10.5px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
           {mode === "mint" ? "Index tokens to mint" : "Index tokens to redeem"}
         </span>
-        <div className="mt-1.5 flex items-center justify-between rounded-2xl border border-line bg-field px-4 py-3">
+        <div className="surface-inset mt-1.5 flex items-center justify-between rounded-2xl px-4 py-3 focus-within:ring-2 focus-within:ring-ink/15">
           <input
             inputMode="decimal"
             value={raw}

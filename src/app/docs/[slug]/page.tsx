@@ -62,7 +62,7 @@ export default async function DocsPage({ params }: { params: Promise<{ slug: str
 
           <nav className="mt-16 grid gap-3 border-t border-line pt-8 sm:grid-cols-2">
             {prev ? (
-              <Link href={`/docs/${prev.slug}`} className="rounded-2xl border border-line p-4 hover:border-green">
+              <Link href={`/docs/${prev.slug}`} className="surface-interactive rounded-2xl border border-line p-4">
                 <div className="text-[12px] text-ink-faint">Previous</div>
                 <div className="mt-1 text-[15px] font-semibold text-ink">{prev.title}</div>
               </Link>
@@ -70,7 +70,7 @@ export default async function DocsPage({ params }: { params: Promise<{ slug: str
               <span />
             )}
             {next && (
-              <Link href={`/docs/${next.slug}`} className="rounded-2xl border border-line p-4 text-right hover:border-green">
+              <Link href={`/docs/${next.slug}`} className="surface-interactive rounded-2xl border border-line p-4 text-right">
                 <div className="text-[12px] text-ink-faint">Next</div>
                 <div className="mt-1 text-[15px] font-semibold text-ink">{next.title}</div>
               </Link>

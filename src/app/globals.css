@@ -65,6 +65,60 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* ============================================================
+   Surfaces.
+
+   The landing already commits to something physical — a phone with a bezel and a lens. These are
+   the same idea at a much lower volume, so a card, a tile and an input read as three depths of one
+   material rather than three unrelated boxes. Shadows are tinted with the ink green, never grey:
+   a neutral shadow on this warm off-white ground looks like dirt.
+   ============================================================ */
+
+:root {
+  --shadow-raised:
+    0 1px 2px rgba(57, 73, 56, 0.05),
+    0 4px 10px -4px rgba(57, 73, 56, 0.07);
+  --shadow-lifted:
+    0 2px 4px rgba(57, 73, 56, 0.06),
+    0 12px 24px -10px rgba(57, 73, 56, 0.12);
+  --edge-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --shadow-inset:
+    inset 0 1px 2px rgba(57, 73, 56, 0.07),
+    inset 0 0 0 1px rgba(57, 73, 56, 0.04);
+}
+
+/* A panel that sits on the page. */
+.surface {
+  background: var(--surface);
+  box-shadow: var(--edge-top), var(--shadow-raised);
+}
+
+/* The same panel, reacting to a pointer. */
+.surface-interactive {
+  background: var(--surface);
+  box-shadow: var(--edge-top), var(--shadow-raised);
+  transition:
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .surface-interactive:hover {
+    box-shadow: var(--edge-top), var(--shadow-lifted);
+    transform: translateY(-2px);
+  }
+}
+
+.surface-interactive:hover {
+  box-shadow: var(--edge-top), var(--shadow-lifted);
+}
+
+/* A field the content sits *inside* — inputs, code blocks, the wells behind a quote. */
+.surface-inset {
+  background: var(--field);
+  box-shadow: var(--shadow-inset);
+}
+
 /* Keyboard focus. The browser default is a thin ring that disappears against the green surfaces,
    so state it deliberately — and only for keyboard users, never on mouse click. */
 :focus-visible {

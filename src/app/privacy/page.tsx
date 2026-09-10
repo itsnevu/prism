@@ -1,4 +1,5 @@
 import { ProseShell } from "@/components/prose/ProseShell";
+import { CONTACT_EMAIL } from "@/lib/links";
 
 export const metadata = { title: "Privacy — Prism Capital" };
 
@@ -13,7 +14,12 @@ export default function Page() {
           <p>Mints, redemptions, and balances are recorded on a public blockchain. They are readable by anyone and cannot be deleted, by us or by you.</p>
           <p>Your browser talks directly to an RPC provider and to your wallet extension, each of which has its own policy.</p>
           <p>We do not sell data and we do not run advertising or cross site tracking.</p>
-          <p>Questions: support@prism.capital</p>
+          <p>
+            Questions:{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2 hover:text-ink">
+              {CONTACT_EMAIL}
+            </a>
+          </p>
         </div>
         <p className="mt-12 border-t border-line pt-6 text-[14px] text-ink-faint">Last updated 10 September 2026</p>
       </div>

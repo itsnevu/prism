@@ -3,7 +3,7 @@
 # leaves approvals and balances behind from the previous run, which made these tests order-dependent.
 set -euo pipefail
 
-FORGE="${FORGE:-$HOME/.foundry/bin}"
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PORT="${E2E_ANVIL_PORT:-8546}"
 RPC_URL="http://127.0.0.1:${PORT}"
 export RPC_URL
@@ -22,7 +22,7 @@ lsof -ti "tcp:${PORT}" 2>/dev/null | xargs -r kill 2>/dev/null || true
 lsof -ti tcp:3100 2>/dev/null | xargs -r kill 2>/dev/null || true
 
 echo "starting a fresh anvil on $RPC_URL"
-"$FORGE/anvil" --chain-id 31337 --port "$PORT" >/tmp/prism-e2e-anvil.log 2>&1 &
+"$HERE/foundry.sh" anvil --chain-id 31337 --port "$PORT" >/tmp/prism-e2e-anvil.log 2>&1 &
 anvil_pid=$!
 
 for _ in $(seq 1 60); do

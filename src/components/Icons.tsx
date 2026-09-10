@@ -82,11 +82,3 @@ export function ArrowIcon({ className = "", size = 18 }: IconProps) {
   );
 }
 
-export function CopyIcon({ className = "", size = 14 }: IconProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden="true" className={className}>
-      <rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
-}

@@ -64,6 +64,21 @@ Diperiksa lewat screenshot di 390px dan 1400px, lalu diperbaiki:
 
 Juga: `scripts/e2e.sh` sekarang ikut membunuh server di port 3100 saat keluar. Server yatim dari run yang dihentikan sempat membuat dua test gagal dengan gejala yang mirip bug produk — bukan.
 
+## Publikasi & housekeeping ✅
+- **Alamat token `$PRISM` palsu dihapus** dari footer landing. Itu alamat karangan yang ditampilkan seperti alamat kontrak sungguhan, lengkap dengan tombol copy — di situs publik itu hal yang orang kirimi uang. Diganti kalimat jujur: "Not audited. Not deployed to a live network."
+- **Link sosial mati** (`https://x.com/`, `https://t.me/`) — ikonnya sekarang hanya muncul kalau `LINKS.x` / `LINKS.telegram` diisi. `null` = tidak dirender.
+- **`LICENSE` (MIT)** ditambahkan, cocok dengan header SPDX di `contracts/`.
+- **CI** (`.github/workflows/ci.yml`): tiga job — kontrak (build + 62 test), web (tsc/eslint/build), dan browser (11 test Playwright). Supaya jalan di runner, resolusi binary Foundry dipindah ke `scripts/foundry.sh` (PATH → `$FOUNDRY_BIN` → `~/.foundry/bin`); sebelumnya semua script npm menunjuk `~/.foundry/bin` yang tidak ada di CI.
+- **`og:image`** — `src/app/opengraph-image.tsx`, digambar dari geometri brand sendiri tanpa fetch webfont, jadi build tidak bergantung pada Google Fonts hidup.
+- Alamat kontak dipusatkan ke `CONTACT_EMAIL` di `links.ts` dan dijadikan `mailto:` di Terms/Privacy. **Pastikan `support@prism.capital` benar-benar ada sebelum situs dipublikasikan.**
+
+## Pass desain: permukaan
+Landing sudah sejak awal memakai bahasa fisik (mockup iPhone, token `--bezel`/`--lens`). Sisanya menyusul dengan volume jauh lebih rendah, jadi kartu, tile, dan input terbaca sebagai tiga kedalaman dari satu material — bukan tiga kotak yang tidak berhubungan.
+- Tiga primitif di `globals.css`: `.surface` (panel di atas halaman), `.surface-interactive` (mengangkat saat hover, dijaga `prefers-reduced-motion`), `.surface-inset` (input, blok kode, kutipan).
+- Bayangan diberi rona hijau tinta, **tidak pernah abu-abu** — bayangan netral di atas off-white hangat terlihat seperti kotoran.
+- Diterapkan ke: kartu docs, prev/next, tabel & blok kode prosa, kartu index `/app`, tile statistik, bar bobot (inset dengan sorotan atas), dan panel form.
+- Form beli/jual kini `sticky` di kolom kanan, jadi tetap terlihat saat daftar komponen yang panjang tergulir lewat.
+
 ## Hasil review keamanan (bukan audit)
 Temuan nyata, sudah diperbaiki:
 1. **USDG boleh jadi leg basket** (`IndexVault` constructor). Kalau dikonfigurasi begitu, USDG yang disetor minter ikut terhitung sebagai kenaikan nilai basket → `mintWithUSDG` mencetak share gratis, dan `redeemForUSDG` menukar USDG dengan dirinya sendiri. Sekarang ditolak: `UsdgCannotBeComponent`, dengan test.

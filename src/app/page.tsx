@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LINKS } from "@/lib/links";
 import { ConnectButton } from "@/components/ConnectButton";
 import { PrismMark, Tri } from "@/components/Logo";
-import { ArrowIcon, CopyIcon, TelegramIcon, XIcon } from "@/components/Icons";
+import { ArrowIcon, TelegramIcon, XIcon } from "@/components/Icons";
 import { DashboardPhone, MintPhone, PhoneDefs } from "@/components/Phone";
 import { HeroBackdrop } from "@/components/HeroBackdrop";
 
@@ -14,12 +14,16 @@ function Header() {
         <span className="lp-wordmark text-[26px]">prism</span>
       </Link>
       <nav className="flex items-center gap-1.5">
-        <a href={LINKS.x} target="_blank" rel="noreferrer" aria-label="Prism on X" className="lp-icon-button">
-          <XIcon />
-        </a>
-        <a href={LINKS.telegram} target="_blank" rel="noreferrer" aria-label="Prism on Telegram" className="lp-icon-button">
-          <TelegramIcon />
-        </a>
+        {LINKS.x && (
+          <a href={LINKS.x} target="_blank" rel="noreferrer" aria-label="Prism on X" className="lp-icon-button">
+            <XIcon />
+          </a>
+        )}
+        {LINKS.telegram && (
+          <a href={LINKS.telegram} target="_blank" rel="noreferrer" aria-label="Prism on Telegram" className="lp-icon-button">
+            <TelegramIcon />
+          </a>
+        )}
         <Link href={LINKS.docs} className="lp-small ml-1 hidden px-3 py-2 font-medium sm:block">
           Docs
         </Link>
@@ -224,26 +228,29 @@ function Closing() {
             <p className="lp-small lp-muted max-w-md">
               Prices go down as well as up. Index tokens track the NAV of their underlying basket.
             </p>
-            <span
-              title="0x80ba…9136"
-              className="flex w-fit items-center gap-2.5 rounded-full border border-white/15 py-1.5 pr-2.5 pl-3.5"
-            >
-              <span className="shrink-0 text-[13px] font-medium text-white">$PRISM</span>
-              <span className="font-mono text-[12px] whitespace-nowrap text-white/60">0x80ba…9136</span>
-              <span className="flex size-6 shrink-0 items-center justify-center rounded-full text-white/55">
-                <CopyIcon />
-              </span>
-            </span>
+            <span className="lp-small lp-muted">Not audited. Not deployed to a live network.</span>
           </div>
           <div className="flex flex-col items-start gap-5 lg:items-end">
-            <div className="flex items-center gap-1.5">
-              <a href={LINKS.x} target="_blank" rel="noreferrer" aria-label="Prism on X" className="lp-icon-button">
-                <XIcon />
-              </a>
-              <a href={LINKS.telegram} target="_blank" rel="noreferrer" aria-label="Prism on Telegram" className="lp-icon-button">
-                <TelegramIcon />
-              </a>
-            </div>
+            {(LINKS.x || LINKS.telegram) && (
+              <div className="flex items-center gap-1.5">
+                {LINKS.x && (
+                  <a href={LINKS.x} target="_blank" rel="noreferrer" aria-label="Prism on X" className="lp-icon-button">
+                    <XIcon />
+                  </a>
+                )}
+                {LINKS.telegram && (
+                  <a
+                    href={LINKS.telegram}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Prism on Telegram"
+                    className="lp-icon-button"
+                  >
+                    <TelegramIcon />
+                  </a>
+                )}
+              </div>
+            )}
             <nav className="lp-small flex flex-wrap gap-x-6 gap-y-2 lg:justify-end">
               <Link href={LINKS.app}>Indexes</Link>
               <Link href={LINKS.docs}>Docs</Link>

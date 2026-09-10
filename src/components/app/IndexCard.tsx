@@ -33,7 +33,7 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
         </div>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-[1.35fr_1fr]">
+      <div className="grid items-start gap-8 lg:grid-cols-[1.35fr_1fr]">
         <div>
           <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
             <div className="flex items-center gap-4">
@@ -69,7 +69,7 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
           <div className="mb-1 mt-6 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
             Components · weight vs target
           </div>
-          <div className="divide-y divide-line rounded-2xl border border-line bg-white px-4">
+          <div className="surface divide-y divide-line rounded-2xl border border-line px-4">
             {ix.components.map((c) => {
               const drift = c.weightBps - c.targetBps;
               const outOfBand = Math.abs(drift) > ix.bandBps;
@@ -86,9 +86,16 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
                     <div className="tnum font-mono text-[10.5px] text-ink-faint">cap {fmtPct(c.maxBps, 0)}</div>
                   </div>
                   <div className="order-3 col-span-2 sm:order-none sm:col-span-1">
-                    <div className="relative h-[6px] overflow-hidden rounded-full bg-field">
-                      <span className="absolute inset-y-0 left-0 rounded-full bg-green" style={{ width: `${Math.min(100, c.weightBps / 100)}%` }} />
-                      <span className="absolute inset-y-0 w-[2px] bg-ink" style={{ left: `${Math.min(100, c.targetBps / 100)}%` }} />
+                    <div className="surface-inset relative h-[7px] overflow-hidden rounded-full">
+                      <span
+                        className="absolute inset-y-0 left-0 rounded-full bg-green shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
+                        style={{ width: `${Math.min(100, c.weightBps / 100)}%` }}
+                      />
+                      <span
+                        className="absolute inset-y-[-2px] w-[2px] rounded-full bg-ink"
+                        title="target weight"
+                        style={{ left: `${Math.min(100, c.targetBps / 100)}%` }}
+                      />
                     </div>
                     {/* On target, naming the target again says the same thing twice. */}
                     <div className="tnum mt-1 flex flex-wrap gap-x-2 font-mono text-[10.5px] text-ink-soft">
@@ -128,7 +135,7 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
           </p>
         </div>
 
-        <div>
+        <div className="lg:sticky lg:top-6 lg:self-start">
           <div className="mb-3 flex gap-1.5" role="tablist" aria-label={`How to trade ${ix.symbol}`}>
             {(
               [
@@ -144,8 +151,8 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
                 aria-selected={route === r}
                 aria-controls={`${ix.key}-panel`}
                 onClick={() => setRoute(r)}
-                className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold ${
-                  route === r ? "bg-white text-ink shadow-[0_1px_2px_rgba(0,0,0,0.06)]" : "text-ink-soft hover:text-ink"
+                className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-all ${
+                  route === r ? "surface text-ink" : "text-ink-soft hover:text-ink"
                 }`}
               >
                 {label}
@@ -167,7 +174,7 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-line bg-white px-4 py-3">
+    <div className="surface rounded-2xl border border-line px-4 py-3">
       <div className="text-[10.5px] font-semibold tracking-[0.1em] uppercase text-ink-faint">{label}</div>
       <div className="tnum mt-1 font-mono text-[14px] font-medium break-words text-ink">{value}</div>
     </div>

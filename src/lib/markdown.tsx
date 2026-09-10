@@ -63,7 +63,7 @@ function inline(text: string, keyPrefix: string): ReactNode[] {
       );
     } else if (token.startsWith("`")) {
       nodes.push(
-        <code key={key} className="rounded bg-field px-1.5 py-0.5 font-mono text-[0.9em] text-ink">
+        <code key={key} className="rounded-md bg-field px-1.5 py-0.5 font-mono text-[0.88em] text-ink ring-1 ring-line/70">
           {token.slice(1, -1)}
         </code>,
       );
@@ -130,7 +130,7 @@ export function Markdown({ source }: { source: string }) {
       out.push(
         <pre
           key={next()}
-          className="mt-6 overflow-x-auto rounded-2xl border border-line bg-field px-5 py-4 font-mono text-[13px] leading-relaxed text-ink"
+          className="surface-inset mt-6 overflow-x-auto rounded-2xl px-5 py-4 font-mono text-[13px] leading-relaxed text-ink"
         >
           <code data-lang={lang || undefined}>{body.join("\n")}</code>
         </pre>,
@@ -174,12 +174,12 @@ export function Markdown({ source }: { source: string }) {
       while (i < lines.length && lines[i].trim().startsWith("|")) rows.push(cells(lines[i++]));
       const k = next();
       out.push(
-        <div key={k} className="mt-6 overflow-x-auto">
+        <div key={k} className="surface mt-6 overflow-x-auto rounded-2xl border border-line px-5 py-1">
           <table className="w-full border-collapse text-left text-[14px]">
             <thead>
               <tr className="border-b border-line">
                 {head.map((c, ci) => (
-                  <th key={ci} className="py-2.5 pr-4 font-semibold text-ink">
+                  <th key={ci} className="py-3 pr-4 text-[11px] font-semibold tracking-[0.08em] uppercase text-ink-faint">
                     {inline(c, `${k}-h${ci}`)}
                   </th>
                 ))}
@@ -187,9 +187,9 @@ export function Markdown({ source }: { source: string }) {
             </thead>
             <tbody>
               {rows.map((row, ri) => (
-                <tr key={ri} className="border-b border-line/60 align-top">
+                <tr key={ri} className="border-b border-line/60 align-top last:border-0">
                   {row.map((c, ci) => (
-                    <td key={ci} className="py-2.5 pr-4 text-ink-soft">
+                    <td key={ci} className="py-3 pr-4 text-ink-soft">
                       {inline(c, `${k}-${ri}-${ci}`)}
                     </td>
                   ))}
@@ -208,7 +208,7 @@ export function Markdown({ source }: { source: string }) {
       while (i < lines.length && lines[i].startsWith("> ")) body.push(lines[i++].slice(2));
       const k = next();
       out.push(
-        <blockquote key={k} className="mt-6 border-l-2 border-green pl-5 text-[16px] text-ink-soft italic">
+        <blockquote key={k} className="surface-inset mt-6 rounded-2xl border-l-[3px] border-green px-5 py-4 text-[16px] text-ink-soft italic">
           {inline(body.join(" "), k)}
         </blockquote>,
       );
