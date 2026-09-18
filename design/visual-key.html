@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prism — Visual Key</title>
+<meta name="description" content="Brand visual key for Prism Capital: palette, logo, type, materials, and Higgsfield-ready prompts.">
+<link rel="icon" href="../public/prismlogo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── Prism tokens — mirrors src/app/globals.css + key-visuals/src/kv.css ── */
+  :root {
+    --bg: #000000;
+    --surface: #111111;
+    --field: #171717;
+    --line: #262626;
+    --ink: #f2f2f2;
+    --ink-soft: #a1a1a1;
+    --ink-faint: #666666;
+    --silver: #d9d9d9;        /* --green in code: the accent, kept by name */
+    --white: #ffffff;         /* --green-accent */
+    --bezel: #0a0a0a;
+    --lens: #1c1c1c;
+    --up: #e6e6e6;
+    --down: #7a7a7a;
+
+    --sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --shadow-card: 0 10px 30px -14px #00000080, 0 2px 6px -2px #00000040;
+    --coin-rim: linear-gradient(90deg, #3a3a3a 0%, #8c8c8c 35%, #b8b8b8 50%, #8a8a8a 68%, #3a3a3a 100%);
+    --cta: linear-gradient(180deg, #ffffff 0%, #bdbdbd 100%);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--silver); color: #000; }
+
+  /* ── Page chrome ── */
+  .page-head {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 14px 24px;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .page-head .brand { display: flex; align-items: center; gap: 12px; }
+  .page-head .brand img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+  .page-head .brand strong { font-weight: 500; letter-spacing: -0.02em; font-size: 20px; }
+  .page-head .brand span { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); letter-spacing: 0.02em; }
+  .page-head nav { display: flex; gap: 6px; flex-wrap: wrap; }
+  .page-head nav a {
+    font-family: var(--mono); font-size: 12px; text-decoration: none;
+    color: var(--ink-soft); padding: 8px 12px; border-radius: 999px; border: 1px solid transparent;
+  }
+  .page-head nav a:hover { color: var(--ink); background: var(--field); }
+
+  main { padding: 40px 16px 96px; display: flex; flex-direction: column; gap: 56px; }
+
+  .board-wrap { position: relative; width: 100%; max-width: 1600px; margin: 0 auto; }
+  .board-label {
+    display: flex; align-items: baseline; gap: 14px; margin: 0 0 14px 2px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; color: var(--ink-faint);
+  }
+  .board-label b { color: var(--ink); font-weight: 500; }
+  .board {
+    position: relative; width: 1600px; transform-origin: top left;
+    background: var(--bg);
+    border: 1px solid var(--line); border-radius: 28px; overflow: hidden;
+  }
+
+  /* ── Shared primitives ── */
+  .eyebrow { font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+  .h-display { font-weight: 400; letter-spacing: -0.025em; line-height: 1.02; margin: 0; }
+  .lede { font-size: 17px; line-height: 1.5; color: var(--ink-soft); margin: 0; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .chip {
+    display: inline-flex; align-items: center;
+    font-size: 14px; font-weight: 500; letter-spacing: -0.01em;
+    color: var(--ink); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
+    border-radius: 999px; padding: 9px 15px;
+  }
+  .chip.cta { background: var(--cta); color: #000; box-shadow: none; }
+  .card { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line), var(--shadow-card); border-radius: 22px; }
+  .card.field { background: var(--field); box-shadow: none; }
+  .card.outline { background: linear-gradient(160deg, #1a1a1a 0%, #050505 100%); box-shadow: inset 0 0 0 1px #ffffff29; }
+  .card-title { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 12px; }
+  .spectrum { display: flex; height: 6px; width: 100%; border-radius: 3px; overflow: hidden; }
+  .spectrum i { display: block; } .spectrum i:nth-child(1) { flex: 3; background: var(--silver); } .spectrum i:nth-child(2) { flex: 2; background: #4d4d4d; } .spectrum i:nth-child(3) { flex: 1; background: var(--ink); }
+
+  /* ── Quilted glass field (from kv.css) ── */
+  .glass { position: relative; isolation: isolate; overflow: hidden; }
+  .glass-base { position: absolute; inset: 0; z-index: -3; background: #000 radial-gradient(140% 115% at 50% 64%, #1e1e1e 0%, #0c0c0c 52%, #000 100%); }
+  .glass-bloom { position: absolute; inset: 0; z-index: -2; background: radial-gradient(58% 42% at 84% 8%, #ffffff2e, #0000 68%), radial-gradient(64% 48% at 10% 96%, #ffffff1f, #0000 72%); }
+  .glass-relief {
+    position: absolute; inset: 0; z-index: -1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='rgb(255,255,255)' stop-opacity='.16'/%3E%3Cstop offset='.5' stop-color='rgb(255,255,255)' stop-opacity='.03'/%3E%3Cstop offset='1' stop-color='rgb(255,255,255)' stop-opacity='.06'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='2' y='2' width='80' height='80' rx='25' fill='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 84px 84px;
+  }
+  .glass-relief.masked { -webkit-mask-image: radial-gradient(46% 38%, #0000 0%, #0000004d 48%, #000 80%); mask-image: radial-gradient(46% 38%, #0000 0%, #0000004d 48%, #000 80%); }
+  .hero-pattern {
+    background-color: var(--field);
+    background-image: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Crect x='10' y='10' width='36' height='36' rx='10' fill='none' stroke='%23262626' stroke-width='1.25'/%3E%3C/svg%3E");
+    background-size: auto, 56px 56px;
+  }
+
+  /* ── Silver coins (from kv.css) ── */
+  .coin { position: absolute; pointer-events: none; isolation: isolate; }
+  .coin-body { position: relative; width: 100%; aspect-ratio: 1 / var(--tilt, 0.6); transform: rotate(var(--rot, 0deg)); }
+  .coin-side, .coin-face, .coin-band { position: absolute; display: block; }
+  .coin-side { inset: 0; border-radius: 50%; transform: translateY(var(--th, 10px)); background: var(--coin-rim); box-shadow: 0 1px 1px rgba(0,0,0,0.6); }
+  .coin-band { left: 0; right: 0; top: 50%; height: var(--th, 10px); background: var(--coin-rim); }
+  .coin-face {
+    inset: 0; border-radius: 50%;
+    background: radial-gradient(ellipse 55% 50% at 36% 30%, rgba(255,255,255,0.5), rgba(255,255,255,0) 72%), radial-gradient(ellipse 85% 85% at 55% 62%, #5c5c5c 0%, #8a8a8a 38%, #b5b5b5 72%, #dcdcdc 100%);
+    box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.6), inset 0 3px 8px rgba(255,255,255,0.35), inset 0 -5px 12px rgba(0,0,0,0.35);
+  }
+  .coin.pale .coin-face { background: radial-gradient(ellipse 60% 55% at 40% 35%, rgba(255,255,255,0.55), rgba(255,255,255,0) 75%), radial-gradient(ellipse 90% 90% at 50% 55%, #7a7a7a 0%, #9a9a9a 45%, #c4c4c4 80%, #e0e0e0 100%); }
+  .coin-shadow { position: absolute; left: 50%; top: 96%; transform: translateX(-50%); width: 78%; aspect-ratio: 5 / 1; background: radial-gradient(50% 50% at 50% 50%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.28) 45%, rgba(0,0,0,0) 100%); filter: blur(6px); z-index: -1; }
+
+  /* ── 01 Key visual ── */
+  #kv .logo { width: 380px; height: 380px; object-fit: cover; border-radius: 50%; box-shadow: 0 0 0 1px #ffffff1a, 0 30px 80px #000; }
+  #kv .wordmark { font-weight: 500; letter-spacing: -0.03em; font-size: 112px; line-height: 1; }
+  #kv .tagline { font-size: 22px; color: var(--ink-soft); letter-spacing: -0.01em; }
+
+  /* ── 02 Palette ── */
+  .swatch-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+  .swatch .fill { height: 72px; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+  .swatch .name { font-weight: 500; font-size: 15px; margin-top: 10px; }
+  .swatch .hex { font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; line-height: 1.45; }
+  .group-label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 10px; }
+
+  /* ── 03 Logo & type ── */
+  .spec-label { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+
+  /* ── 04 Materials ── */
+  .art { position: relative; border-radius: 18px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface); }
+  .art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .caption { margin-top: 10px; }
+  .caption b { display: block; font-weight: 500; font-size: 15px; }
+  .caption span { display: block; font-size: 13px; line-height: 1.5; color: var(--ink-soft); margin-top: 3px; }
+
+  /* ── 05 Prompts ── */
+  .prompt { position: relative; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); border-radius: 16px; padding: 14px 16px; }
+  .prompt .ph { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .prompt .ph b { font-weight: 500; font-size: 14.5px; }
+  .prompt .ph small { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+  .prompt p { margin: 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.6; color: #d4d4d4; }
+  .copy {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+    color: var(--ink); background: var(--field); border: 1px solid var(--line);
+    border-radius: 999px; padding: 6px 11px; cursor: pointer; min-height: 28px;
+  }
+  .copy:hover { background: var(--silver); color: #000; border-color: transparent; }
+  .copy.done { background: #fff; color: #000; border-color: transparent; }
+
+  /* ── 06 Rules ── */
+  .rule { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5; color: var(--ink-soft); }
+  .rule svg { flex: 0 0 auto; margin-top: 3px; }
+  .rule b { color: var(--ink); font-weight: 500; }
+
+  @media (max-width: 720px) {
+    .page-head { flex-direction: column; align-items: flex-start; }
+    main { padding-top: 24px; }
+  }
+
+  /* Export mode (?board=kv): one board, full-bleed, unscaled — for PNG capture. */
+  body.export .page-head, body.export .board-label, body.export .board-wrap { display: none; }
+  body.export .board-wrap.export-target { display: block; max-width: none; height: auto !important; }
+  body.export main { padding: 0; gap: 0; }
+  body.export .board { border: 0; border-radius: 0; transform: none !important; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+  <defs>
+    <!-- PrismMark from src/components/Logo.tsx, monochrome -->
+    <symbol id="mark" viewBox="0 0 44 44">
+      <path d="M3 23H14" stroke="#f2f2f2" stroke-width="2.6" stroke-linecap="round"></path>
+      <path d="M22 7 L35 33 H9 Z" fill="#171717" stroke="#f2f2f2" stroke-width="2.6" stroke-linejoin="round"></path>
+      <path d="M27 17 L41 9" stroke="#d9d9d9" stroke-width="2.8" stroke-linecap="round"></path>
+      <path d="M29 21 L43 21" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round"></path>
+      <path d="M31 25 L41 33" stroke="#7a7a7a" stroke-width="2.8" stroke-linecap="round"></path>
+    </symbol>
+    <symbol id="tri" viewBox="0 0 24 24">
+      <path d="M12 3.2 L21.8 20.4 H2.2 Z" stroke-linejoin="round"></path>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="page-head">
+  <div class="brand">
+    <img src="../public/prismlogo.png" alt="">
+    <strong>prism</strong>
+    <span>visual key · v2 · 18 Sep 2026 · reference sheet for Higgsfield</span>
+  </div>
+  <nav aria-label="Boards">
+    <a href="#kv">01 Key visual</a>
+    <a href="#palette">02 Palette</a>
+    <a href="#type">03 Logo &amp; type</a>
+    <a href="#materials">04 Materials</a>
+    <a href="#prompts">05 Prompts</a>
+    <a href="#rules">06 Do / Don't</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════════════════ 01 KEY VISUAL ═══ -->
+<section class="board-wrap" aria-labelledby="kv-label">
+  <p class="board-label" id="kv-label"><b>01</b> Key visual · 1600 × 900 · screenshot this one as the primary style reference</p>
+  <div class="board glass" id="kv" style="height: 900px;">
+    <div class="glass-base"></div>
+    <div class="glass-bloom"></div>
+    <div class="glass-relief"></div>
+
+    <div class="coin" style="left: 60px; top: 90px; width: 190px; --tilt: 0.72; --rot: -14deg; --th: 14px;"><div class="coin-body"><span class="coin-side"></span><span class="coin-band"></span><span class="coin-face"></span></div><span class="coin-shadow"></span></div>
+    <div class="coin pale" style="left: 200px; top: 40px; width: 120px; --tilt: 0.8; --rot: 24deg; --th: 10px;"><div class="coin-body"><span class="coin-side"></span><span class="coin-band"></span><span class="coin-face"></span></div><span class="coin-shadow"></span></div>
+    <div class="coin" style="left: 1290px; top: 120px; width: 230px; --tilt: 0.5; --rot: 18deg; --th: 18px;"><div class="coin-body"><span class="coin-side"></span><span class="coin-band"></span><span class="coin-face"></span></div><span class="coin-shadow"></span></div>
+    <div class="coin pale" style="left: 1400px; top: 740px; width: 150px; --tilt: 0.34; --rot: -8deg; --th: 16px;"><div class="coin-body"><span class="coin-side"></span><span class="coin-band"></span><span class="coin-face"></span></div><span class="coin-shadow"></span></div>
+    <div class="coin" style="left: 120px; top: 620px; width: 110px; --tilt: 0.62; --rot: 30deg; --th: 9px;"><div class="coin-body"><span class="coin-side"></span><span class="coin-band"></span><span class="coin-face"></span></div><span class="coin-shadow"></span></div>
+
+    <div style="position: absolute; inset: 0; padding: 72px 96px; display: flex; align-items: center; gap: 72px;">
+
+      <div style="flex: 0 0 640px; display: flex; flex-direction: column; align-items: center; gap: 30px;">
+        <img class="logo" src="../public/prismlogo.png" alt="Prism logo: a glass prism on black, one beam enters and fans out as light">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+          <div class="wordmark">prism</div>
+          <div class="tagline">One token, the whole market.</div>
+        </div>
+      </div>
+
+      <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 24px; max-width: 640px;">
+        <div class="eyebrow">visual key · one beam in · a spectrum out · monochrome</div>
+        <h1 class="h-display" style="font-size: 52px;">Buy an idea,<br><span style="color: var(--ink-soft);">not a spreadsheet.</span></h1>
+        <p class="lede">
+          Pure black ground, graphite surfaces, silver objects. No colour at all: the whole brand is a greyscale
+          of light through glass. Thick brushed-silver coins float over a quilted field of dark glass tiles.
+          The prism is real optics, white light in, a fan of light out.
+        </p>
+        <div style="display: flex; gap: 10px; align-items: stretch;">
+          <div style="flex: 1; height: 44px; border-radius: 12px; background: #000000; box-shadow: inset 0 0 0 1px var(--line);"></div>
+          <div style="flex: 1; height: 44px; border-radius: 12px; background: #111111; box-shadow: inset 0 0 0 1px var(--line);"></div>
+          <div style="flex: 1; height: 44px; border-radius: 12px; background: #262626;"></div>
+          <div style="flex: 1; height: 44px; border-radius: 12px; background: #8a8a8a;"></div>
+          <div style="flex: 1; height: 44px; border-radius: 12px; background: #d9d9d9;"></div>
+          <div style="flex: 1; height: 44px; border-radius: 12px; background: #ffffff;"></div>
+        </div>
+        <div class="mono" style="display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-soft);">
+          <span>#000 ground</span><span>#111 surface</span><span>#262626 line</span><span>#8A8A8A coin</span><span>#D9D9D9 silver</span><span>#FFF light</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <span class="chip cta">Monochrome</span>
+          <span class="chip">Brushed silver</span>
+          <span class="chip">Dark glass tiles</span>
+          <span class="chip">Floating coins</span>
+          <span class="chip">Light through glass</span>
+        </div>
+        <div class="mono" style="font-size: 12.5px; color: var(--ink-faint); line-height: 1.7;">
+          Schibsted Grotesk · Geist Mono &nbsp;/&nbsp; pSEMI · pMETL · pDGEN &nbsp;/&nbsp; prismcapitals.com
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ 02 PALETTE ═══ -->
+<section class="board-wrap" aria-labelledby="palette-label">
+  <p class="board-label" id="palette-label"><b>02</b> Palette · tokens from src/app/globals.css</p>
+  <div class="board" id="palette" style="height: 960px; padding: 64px;">
+    <div style="display: flex; flex-direction: column; gap: 26px; height: 100%;">
+
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 32px;">
+        <div>
+          <div class="eyebrow">palette</div>
+          <h2 class="h-display" style="font-size: 44px; margin-top: 10px;">Black ground, graphite surfaces, silver accent.</h2>
+        </div>
+        <p class="lede" style="max-width: 560px; font-size: 15px;">
+          Ratio per frame: roughly <b style="color: var(--ink);">75% black · 20% graphite · 5% silver and white</b>.
+          There is no hue anywhere. A tint of any kind, warm or cool, is off-brand.
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="height: 48px; border-radius: 14px; background: linear-gradient(90deg, #000000 0%, #111111 20%, #3a3a3a 40%, #8a8a8a 60%, #d9d9d9 80%, #ffffff 100%); box-shadow: inset 0 0 0 1px var(--line);"></div>
+        <div class="mono" style="display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-soft);">
+          <span>#000000</span><span>#111111</span><span>#3A3A3A</span><span>#8A8A8A</span><span>#D9D9D9</span><span>#FFFFFF &nbsp;·&nbsp; the only ramp: ground → light</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="group-label">Ground &amp; surfaces — three depths of one material</p>
+        <div class="swatch-row">
+          <div class="swatch"><div class="fill" style="background: #000000;"></div><div class="name">Background</div><div class="hex">#000000<br>page · ground</div></div>
+          <div class="swatch"><div class="fill" style="background: #111111;"></div><div class="name">Surface</div><div class="hex">#111111<br>card · pill</div></div>
+          <div class="swatch"><div class="fill" style="background: #171717;"></div><div class="name">Field</div><div class="hex">#171717<br>panel · prism fill</div></div>
+          <div class="swatch"><div class="fill" style="background: #262626;"></div><div class="name">Line</div><div class="hex">#262626<br>hairline · tile stroke</div></div>
+          <div class="swatch"><div class="fill" style="background: #000 radial-gradient(140% 115% at 50% 64%, #1e1e1e 0%, #0c0c0c 52%, #000 100%);"></div><div class="name">Glass base</div><div class="hex">#1E1E1E → #000<br>hero radial</div></div>
+          <div class="swatch"><div class="fill" style="background: linear-gradient(160deg, #1a1a1a 0%, #050505 100%); box-shadow: inset 0 0 0 1px #ffffff29;"></div><div class="name">Outline tile</div><div class="hex">#1A1A1A → #050505<br>1px white at 16%</div></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="group-label">Ink &amp; silver — the accent is a metal, not a colour</p>
+        <div class="swatch-row">
+          <div class="swatch"><div class="fill" style="background: #f2f2f2;"></div><div class="name">Ink</div><div class="hex">#F2F2F2<br>headlines · primary text</div></div>
+          <div class="swatch"><div class="fill" style="background: #a1a1a1;"></div><div class="name">Ink soft</div><div class="hex">#A1A1A1<br>body · second half of a headline</div></div>
+          <div class="swatch"><div class="fill" style="background: #666666;"></div><div class="name">Ink faint</div><div class="hex">#666666<br>captions · labels</div></div>
+          <div class="swatch"><div class="fill" style="background: #d9d9d9;"></div><div class="name">Silver</div><div class="hex">#D9D9D9<br>accent · first ray · spectrum</div></div>
+          <div class="swatch"><div class="fill" style="background: linear-gradient(180deg, #ffffff 0%, #bdbdbd 100%);"></div><div class="name">CTA</div><div class="hex">#FFF → #BDBDBD<br>primary pill · black text</div></div>
+          <div class="swatch"><div class="fill" style="background: linear-gradient(90deg, #3a3a3a 0%, #8c8c8c 35%, #b8b8b8 50%, #8a8a8a 68%, #3a3a3a 100%);"></div><div class="name">Coin rim</div><div class="hex">#3A3A3A · #B8B8B8<br>brushed metal band</div></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="group-label">Coin face, bezel &amp; signals</p>
+        <div class="swatch-row">
+          <div class="swatch"><div class="fill" style="background: radial-gradient(ellipse 85% 85% at 55% 62%, #5c5c5c 0%, #8a8a8a 38%, #b5b5b5 72%, #dcdcdc 100%);"></div><div class="name">Coin face</div><div class="hex">#5C5C5C → #DCDCDC<br>white highlight top-left</div></div>
+          <div class="swatch"><div class="fill" style="background: radial-gradient(ellipse 90% 90% at 50% 55%, #7a7a7a 0%, #9a9a9a 45%, #c4c4c4 80%, #e0e0e0 100%);"></div><div class="name">Coin pale</div><div class="hex">#7A7A7A → #E0E0E0<br>far coins</div></div>
+          <div class="swatch"><div class="fill" style="background: #0a0a0a; box-shadow: inset 0 0 0 1px var(--line);"></div><div class="name">Bezel</div><div class="hex">#0A0A0A<br>phone frame</div></div>
+          <div class="swatch"><div class="fill" style="background: #1c1c1c;"></div><div class="name">Lens</div><div class="hex">#1C1C1C<br>camera · dark glass</div></div>
+          <div class="swatch"><div class="fill" style="background: #e6e6e6;"></div><div class="name">Up</div><div class="hex">#E6E6E6<br>positive change</div></div>
+          <div class="swatch"><div class="fill" style="background: #7a7a7a;"></div><div class="name">Down</div><div class="hex">#7A7A7A<br>negative change · dimmer, not red</div></div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: auto;">
+        <div class="card field" style="padding: 16px 18px;"><p class="card-title">Light</p><p class="lede" style="font-size: 14px;">One soft white key from top-left. Highlights are white at 50% on the upper-left of every coin; blooms sit in opposite corners of the field.</p></div>
+        <div class="card field" style="padding: 16px 18px;"><p class="card-title">Value, not hue</p><p class="lede" style="font-size: 14px;">Hierarchy is done entirely with brightness: #F2F2F2 for what matters, #A1A1A1 for the rest, #666 for labels. Even "down" is just a darker grey.</p></div>
+        <div class="card field" style="padding: 16px 18px;"><p class="card-title">No tint</p><p class="lede" style="font-size: 14px;">Renders drift blue or warm easily. Check a mid-grey pixel: R, G and B must be within 3 of each other or it is off-brand.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ 03 LOGO & TYPE ═══ -->
+<section class="board-wrap" aria-labelledby="type-label">
+  <p class="board-label" id="type-label"><b>03</b> Logo &amp; type · Schibsted Grotesk / Geist Mono</p>
+  <div class="board" id="type" style="height: 900px; padding: 64px;">
+    <div style="display: flex; gap: 56px; height: 100%;">
+
+      <div style="flex: 0 0 600px; display: flex; flex-direction: column; gap: 22px;">
+        <div class="art" style="height: 420px; background: #000;">
+          <img src="../public/prismlogo.png" alt="Prism logo: a glass prism on black, one beam enters from the left and fans out on the right">
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+          <div class="card" style="padding: 18px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <img src="../public/prismlogo.png" alt="" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+            <div class="mono" style="font-size: 12px; color: var(--ink-soft);">avatar</div>
+          </div>
+          <div class="card" style="padding: 18px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <svg width="44" height="44" aria-hidden="true"><use href="#tri" fill="#d9d9d9"></use></svg>
+            <div class="mono" style="font-size: 12px;">pSEMI</div>
+          </div>
+          <div class="card" style="padding: 18px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <svg width="44" height="44" aria-hidden="true"><use href="#tri" fill="#171717" stroke="#f2f2f2" stroke-width="1.6"></use></svg>
+            <div class="mono" style="font-size: 12px;">pMETL</div>
+          </div>
+          <div class="card" style="padding: 18px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <svg width="44" height="44" aria-hidden="true"><use href="#tri" fill="#666666"></use></svg>
+            <div class="mono" style="font-size: 12px;">pDGEN</div>
+          </div>
+        </div>
+        <div class="card field" style="padding: 18px 20px; flex: 1 1 auto;">
+          <p class="card-title">Logo rules</p>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.5; color: var(--ink-soft);">
+            <div><b style="color: var(--ink);">The logo is a photograph of light,</b> not an icon: a glass prism on pure black, beam in from the left, fan out to the right. Always on black, never cut out.</div>
+            <div><b style="color: var(--ink);">Small sizes use the circle crop</b> (avatar) or the 44px line mark from Logo.tsx. Never stretch, never add a glow.</div>
+            <div><b style="color: var(--ink);">Wordmark is lowercase</b> "prism", weight 500, tracking −0.02em. Baskets are triangles in three greys.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 28px;">
+        <div>
+          <div class="eyebrow">type</div>
+          <h2 class="h-display" style="font-size: 44px; margin-top: 10px;">One grotesk, regular weight, two greys.</h2>
+        </div>
+
+        <div>
+          <div class="spec-label">display — Schibsted Grotesk 400 · −0.025em · the second clause drops to ink-soft</div>
+          <div class="h-display" style="font-size: 88px;">Mint the basket.<br><span style="color: var(--ink-soft);">Redeem the basket.</span></div>
+        </div>
+
+        <div>
+          <div class="spec-label">head — Schibsted Grotesk 400 · 42px</div>
+          <div class="h-display" style="font-size: 42px; color: var(--ink-soft);">Priced honestly. Paused when a leg goes stale.</div>
+        </div>
+
+        <div>
+          <div class="spec-label">body — Schibsted Grotesk 400 · 17px · 1.5 · ink-soft</div>
+          <p class="lede" style="max-width: 720px;">Buy pSEMI, hold six semiconductor names. Buy pMETL, hold silver and friends. Real tokenized assets, in your own wallet. Mint or redeem any time. No broker, no eight tickers to babysit.</p>
+        </div>
+
+        <div>
+          <div class="spec-label">data — Geist Mono 400/500 · tabular · NAV, weights, tickers</div>
+          <div class="mono" style="font-size: 15px; line-height: 1.7;">
+            pSEMI &nbsp;NAV <b>$238.10</b> &nbsp;· NVDA · AMD · AVGO · TSM · ASML · MU<br>
+            pMETL &nbsp;NAV <b>$33.20</b> &nbsp;· <span style="color: var(--up);">+1.4%</span> &nbsp;&nbsp; pDGEN &nbsp;NAV <b>$0.19</b> &nbsp;· <span style="color: var(--down);">−3.1%</span> · <span style="color: var(--ink-faint);">stale · paused</span>
+          </div>
+        </div>
+
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 14px;">
+          <div class="spectrum"><i></i><i></i><i></i></div>
+          <div class="spec-label" style="margin-bottom: 0;">vocabulary — optics and baskets, not trading</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <span class="chip">Basket</span><span class="chip">Mint</span><span class="chip">Redeem</span><span class="chip">NAV</span>
+            <span class="chip">Rebalance</span><span class="chip">Stale → paused</span><span class="chip cta">One beam in, a spectrum out</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ 04 MATERIALS ═══ -->
+<section class="board-wrap" aria-labelledby="materials-label">
+  <p class="board-label" id="materials-label"><b>04</b> Materials &amp; motifs · the site's own CSS renders (key-visuals/src/kv.css) — use as image references</p>
+  <div class="board" id="materials" style="height: 1000px; padding: 64px;">
+    <div style="display: flex; flex-direction: column; gap: 26px; height: 100%;">
+
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 32px;">
+        <div>
+          <div class="eyebrow">materials &amp; motifs</div>
+          <h2 class="h-display" style="font-size: 44px; margin-top: 10px;">Dark glass, brushed silver, white light.</h2>
+        </div>
+        <p class="lede" style="max-width: 560px; font-size: 15px;">
+          <b style="color: var(--ink);">Dark glass tiles</b> (quilted, rounded squares, 84px pitch, faint white edge), <b style="color: var(--ink);">brushed-silver coins</b> (thick discs, satin face, bright rim),
+          <b style="color: var(--ink);">optical glass</b> (the prism). One soft white key light, black falloff.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
+        <div>
+          <div class="art glass" style="height: 264px;"><div class="glass-base"></div><div class="glass-bloom"></div><div class="glass-relief"></div></div>
+          <div class="caption"><b>Quilted glass field — the ground</b><span>Rounded-square relief in near-black, white edge at 16%, faint white blooms in opposite corners. Every hero stands on this.</span></div>
+        </div>
+        <div>
+          <div class="art glass" style="height: 264px;"><div class="glass-base"></div><div class="glass-bloom"></div><div class="glass-relief masked"></div>
+            <div class="coin" style="left: 40px; top: 50px; width: 180px; --tilt: 0.72; --rot: -14deg; --th: 14px;"><div class="coin-body"><span class="coin-side"></span><span class="coin-band"></span><span class="coin-face"></span></div><span class="coin-shadow"></span></div>
+            <div class="coin pale" style="left: 180px; top: 20px; width: 120px; --tilt: 0.8; --rot: 24deg; --th: 10px;"><div class="coin-body"><span class="coin-side"></span><span class="coin-band"></span><span class="coin-face"></span></div><span class="coin-shadow"></span></div>
+            <div class="coin" style="left: 320px; top: 120px; width: 130px; --tilt: 0.36; --rot: 10deg; --th: 16px;"><div class="coin-body"><span class="coin-side"></span><span class="coin-band"></span><span class="coin-face"></span></div><span class="coin-shadow"></span></div>
+          </div>
+          <div class="caption"><b>Silver coins — the token</b><span>Thick satin-silver discs floating above the field, bright brushed rim, soft black ground shadow. One coin = one basket.</span></div>
+        </div>
+        <div>
+          <div class="art" style="height: 264px; background: #000;"><img src="../public/prismlogo.png" alt="" style="object-position: center 55%;"></div>
+          <div class="caption"><b>The prism — the idea</b><span>Optical glass on black. A thin white beam enters, a soft fan of light leaves. This is the logo and the hero object at once.</span></div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 300px 300px 300px minmax(0, 1fr); gap: 24px; margin-top: auto;">
+        <div>
+          <div class="art" style="height: 300px; background: linear-gradient(160deg, #ffffff 0%, #b3b3b3 100%); display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: 28px; color: #000;">
+            <div class="h-display" style="font-size: 26px; color: #000;">Start with one token.</div>
+            <div style="display: inline-flex; align-self: flex-start; background: #000; color: #f2f2f2; border-radius: 999px; padding: 10px 18px; font-size: 14px; font-weight: 500;">Get started</div>
+          </div>
+          <div class="caption"><b>CTA tile</b><span>The one bright surface: white-to-silver gradient with black text.</span></div>
+        </div>
+        <div>
+          <div class="art glass" style="height: 300px; display: flex; align-items: flex-end; justify-content: center; padding-top: 24px;">
+            <div class="glass-base"></div><div class="glass-bloom"></div><div class="glass-relief masked"></div>
+            <div style="width: 150px; height: 300px; border-radius: 26px 26px 0 0; background: #0a0a0a; padding: 8px 8px 0; box-shadow: 0 0 0 1px #ffffff1f, 0 20px 70px #000;">
+              <div style="height: 100%; border-radius: 20px 20px 0 0; background: #000 radial-gradient(140% 115% at 50% 64%, #1e1e1e 0%, #0c0c0c 52%, #000 100%); padding: 22px 12px 0; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 5px;"><img src="../public/prismlogo.png" alt="" style="width: 16px; height: 16px; border-radius: 50%; object-fit: cover;"><span style="font-size: 11px; font-weight: 500;">prism</span></div>
+                <div style="height: 34px; border-radius: 10px; background: #111; box-shadow: inset 0 0 0 1px #262626;"></div>
+                <div style="height: 34px; border-radius: 10px; background: #111; box-shadow: inset 0 0 0 1px #262626;"></div>
+                <div style="height: 34px; border-radius: 10px; background: linear-gradient(180deg, #fff 0%, #bdbdbd 100%);"></div>
+              </div>
+            </div>
+          </div>
+          <div class="caption"><b>Phone on the field</b><span>Bezel #0A0A0A, screen is the same dark glass. Product shots are the app in the phone.</span></div>
+        </div>
+        <div>
+          <div class="art hero-pattern" style="height: 300px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px;">
+            <div style="border-radius: 18px; background: #111; box-shadow: inset 0 0 0 1px #262626, var(--shadow-card);"></div>
+            <div style="border-radius: 18px; background: linear-gradient(160deg, #1a1a1a 0%, #050505 100%); box-shadow: inset 0 0 0 1px #ffffff29;"></div>
+            <div style="border-radius: 18px; background: linear-gradient(160deg, #1a1a1a 0%, #050505 100%); box-shadow: inset 0 0 0 1px #ffffff29;"></div>
+            <div style="border-radius: 18px; background: #111; box-shadow: inset 0 0 0 1px #262626, var(--shadow-card);"></div>
+          </div>
+          <div class="caption"><b>Card, outline &amp; pattern</b><span>Radius 18–28px. Surface card with a #262626 hairline; outline tile with a 16% white edge; 56px inner-page pattern.</span></div>
+        </div>
+        <div class="card field" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+          <p class="card-title" style="margin-bottom: 0;">Light &amp; camera recipe</p>
+          <div style="font-size: 14px; line-height: 1.55; color: var(--ink-soft); display: flex; flex-direction: column; gap: 9px;">
+            <div><b style="color: var(--ink);">Key:</b> one soft white light, top-left, like a large softbox. Highlights read as satin, not mirror.</div>
+            <div><b style="color: var(--ink);">Fill:</b> none. Shadows go to true black. No ambient colour.</div>
+            <div><b style="color: var(--ink);">Camera:</b> three-quarter top-down (~35°) for coins on the field; straight-on for the prism and the phone.</div>
+            <div><b style="color: var(--ink);">Depth:</b> mostly sharp; slight falloff on far coins. The prism's fan of light is soft by nature.</div>
+            <div><b style="color: var(--ink);">Framing:</b> coins in the corners, copy owns the centre-left. Half the frame is empty dark field.</div>
+            <div><b style="color: var(--ink);">Finish:</b> satin metal, clean glass. No grain, no chromatic fringing, no lens flare.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ 05 PROMPTS ═══ -->
+<section class="board-wrap" aria-labelledby="prompts-label">
+  <p class="board-label" id="prompts-label"><b>05</b> Higgsfield prompts · paste the style anchor at the end of every prompt · copy buttons work in the browser</p>
+  <div class="board" id="prompts" style="height: 1160px; padding: 64px;">
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) 480px; gap: 40px; height: 100%;">
+
+      <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0;">
+        <div style="margin-bottom: 6px;">
+          <div class="eyebrow">higgsfield prompts</div>
+          <h2 class="h-display" style="font-size: 40px; margin-top: 10px;">Scene first, anchor last.</h2>
+        </div>
+
+        <div class="prompt" style="background: var(--field); box-shadow: inset 0 0 0 1px #ffffff29;">
+          <div class="ph"><b>Style anchor — append to every prompt</b><button class="copy" type="button" data-copy="anchor">Copy</button></div>
+          <p id="anchor">Prism brand look: strictly black and white monochrome, pure black background (#000000), graphite surfaces (#111111 to #262626), brushed satin silver metal objects, dark glass with faint white edges, quilted field of rounded dark glass tiles, thick floating silver coins with soft black shadows, one soft white key light from top-left, no colour tint at all, clean minimal 3D render, airy composition with empty black space, no people, no text, matte and satin finishes, octane render, 8K</p>
+        </div>
+
+        <div class="prompt">
+          <div class="ph"><b>01 · Hero — coins on the field</b><small>16:9 · reference: board 01</small><button class="copy" type="button" data-copy="p1">Copy</button></div>
+          <p id="p1">Several thick brushed-silver coins floating just above a quilted field of dark glass tiles, seen from a three-quarter top-down angle, satin faces with a soft white highlight top-left and a bright polished rim, each coin casting a soft black elliptical shadow, the centre-left of the frame left empty for a headline, black falloff at the edges.</p>
+        </div>
+
+        <div class="prompt">
+          <div class="ph"><b>02 · The prism — the idea</b><small>16:9 · video 5s · reference: public/prismlogo.png</small><button class="copy" type="button" data-copy="p2">Copy</button></div>
+          <p id="p2">A hollow triangular prism of clear optical glass on a pure black background, a thin bright white beam of light enters from the left and leaves the right face as a soft widening fan of white light, no rainbow, no spectrum colours, black and white only, photographic, long exposure look, minimal.</p>
+        </div>
+
+        <div class="prompt">
+          <div class="ph"><b>03 · Three baskets</b><small>1:1 · reference: board 03 triangles</small><button class="copy" type="button" data-copy="p3">Copy</button></div>
+          <p id="p3">Three brushed-silver coins standing on a dark quilted glass field, each with a small triangle embossed on its face, one triangle bright silver, one dark with a fine white outline, one mid grey, soft white key light from top-left, black surroundings, product photography, satin metal.</p>
+        </div>
+
+        <div class="prompt">
+          <div class="ph"><b>04 · Rebalance</b><small>16:9 · video 5s</small><button class="copy" type="button" data-copy="p4">Copy</button></div>
+          <p id="p4">Eight small brushed-silver discs of uneven sizes resting on a dark quilted glass field slowly and gently settling into eight equal-sized discs in a neat row, calm and precise, one soft white light, black background, no text, minimal 3D animation, monochrome.</p>
+        </div>
+
+        <div class="prompt">
+          <div class="ph"><b>05 · Stale → paused</b><small>1:1 · reference: board 02</small><button class="copy" type="button" data-copy="p5">Copy</button></div>
+          <p id="p5">A row of brushed-silver coins on a black quilted glass field, one coin gone dull dark grey and matte while the others stay bright satin silver, very calm, soft white light, product photography, lots of empty black space, monochrome.</p>
+        </div>
+
+        <div class="prompt">
+          <div class="ph"><b>06 · Phone on the field</b><small>9:16 · reference: board 04 phone</small><button class="copy" type="button" data-copy="p6">Copy</button></div>
+          <p id="p6">A modern smartphone with a near-black bezel standing upright on a quilted dark glass field, its screen showing a blank black-to-graphite gradient, two brushed-silver coins floating beside it, three-quarter view, one soft white key light, black background, clean product render, black and white.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="prompt" style="box-shadow: inset 0 0 0 1px #4d4d4d;">
+          <div class="ph"><b style="color: var(--ink-soft);">Negative prompt</b><button class="copy" type="button" data-copy="neg">Copy</button></div>
+          <p id="neg">colour, color tint, blue, teal, green, gold, yellow, orange, purple, rainbow, spectrum, neon, glow, cyberpunk, people, hands, faces, text, letters, watermark, other logos, white background, daylight, grey fog, haze, caustics, sparkle, lens flare, chrome mirror reflections, coins with faces or numbers, charts, candlesticks, rockets, bull, bear, wood, marble, nature</p>
+        </div>
+
+        <div class="prompt">
+          <div class="ph"><b>Motion — video prompts</b><button class="copy" type="button" data-copy="motion">Copy</button></div>
+          <p id="motion">Slow, weightless motion. Coins drift up and down a few pixels on a 9 second cycle, alternating, never spinning fast. Camera locked off or a very slow push-in. Light stays constant. Reveal by a white beam entering the prism and fanning out. End on a held frame with the centre empty and black.</p>
+        </div>
+
+        <div class="card field" style="padding: 18px 20px;">
+          <p class="card-title">Settings cheat-sheet</p>
+          <div style="font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); display: flex; flex-direction: column; gap: 8px;">
+            <div><b style="color: var(--ink);">Image reference:</b> board 01 for the whole look; <span class="mono">public/prismlogo.png</span> for the prism; <span class="mono">key-visuals/01-hero-16x9.png</span> for the site hero.</div>
+            <div><b style="color: var(--ink);">Reference strength:</b> 0.6–0.8 to keep the material; 0.3–0.4 for a new composition.</div>
+            <div><b style="color: var(--ink);">Aspect:</b> 16:9 hero &amp; video · 1:1 social · 9:16 phone shots.</div>
+            <div><b style="color: var(--ink);">Video:</b> 5s clips, 24fps, motion strength low. Stills first, then animate the keeper.</div>
+            <div><b style="color: var(--ink);">Colour check:</b> desaturate the result and compare; if anything changed, it had a tint. Regenerate.</div>
+          </div>
+        </div>
+
+        <div class="card field" style="padding: 18px 20px; margin-top: auto;">
+          <p class="card-title">Workflow</p>
+          <div class="mono" style="font-size: 12.5px; line-height: 1.8; color: #d4d4d4;">
+            1 · scene prompt + style anchor<br>
+            2 · attach reference image (board 01 or the logo)<br>
+            3 · 4 variations → keep the blackest, least tinted<br>
+            4 · upscale · check greys against board 02<br>
+            5 · animate keeper with the motion prompt
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ 06 RULES ═══ -->
+<section class="board-wrap" aria-labelledby="rules-label">
+  <p class="board-label" id="rules-label"><b>06</b> Do / Don't · the checks that keep a render on-brand</p>
+  <div class="board" id="rules" style="height: 690px; padding: 64px;">
+    <div style="display: flex; flex-direction: column; gap: 32px; height: 100%;">
+
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 32px;">
+        <div>
+          <div class="eyebrow">do / don't</div>
+          <h2 class="h-display" style="font-size: 44px; margin-top: 10px;">If it has a colour, it is off-brand.</h2>
+        </div>
+        <div class="mono" style="font-size: 13px; color: var(--ink-soft); text-align: right; line-height: 1.7;">
+          75% black · 20% graphite · 5% silver and white<br>one soft white light · shadows go to black
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; flex: 1 1 auto;">
+        <div class="card field" style="padding: 28px 30px; display: flex; flex-direction: column; gap: 18px;">
+          <p class="card-title" style="color: var(--ink);">Do</p>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2f2f2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg><span><b>Pure black ground.</b> #000000, not charcoal, not navy. Surfaces are graphite on top of it.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2f2f2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg><span><b>Strict greyscale.</b> Every pixel has R = G = B. Hierarchy comes from brightness alone.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2f2f2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg><span><b>Brushed satin silver,</b> not chrome. A soft highlight, a bright rim, no mirror reflections.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2f2f2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg><span><b>Thick coins and quilted tiles</b> are the only objects; the prism is the only glass.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2f2f2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg><span><b>One soft white key light</b> from top-left. Shadows fall to true black.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2f2f2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg><span><b>Objects in the corners, copy in the centre-left.</b> Half the frame stays empty.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2f2f2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg><span><b>Calm motion.</b> Things drift and settle; nothing spins, flies or explodes.</span></div>
+        </div>
+
+        <div class="card outline" style="padding: 28px 30px; display: flex; flex-direction: column; gap: 18px;">
+          <p class="card-title" style="color: var(--ink-soft);">Don't</p>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span><b>No colour, ever.</b> Not green, not blue, not gold. The most common drift is a cool blue tint on the silver.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span><b>No rainbow through the prism.</b> White in, white fan out. It is not the Pink Floyd cover.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span><b>No neon, glow, bloom or lens flare.</b> Light is soft and photographic.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span><b>No chrome mirror finish</b> and no gold. Silver is satin and brushed.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span><b>No crypto clichés:</b> coins with faces, candlesticks, rockets, bulls, bears, vault doors.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span><b>No people, hands or mascots.</b> The product is the object.</span></div>
+          <div class="rule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span><b>No baked-in text.</b> Generate clean plates; type is set afterwards in Schibsted Grotesk.</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+  // ?board=<id> shows that one board alone at 1600px for PNG export
+  // (see design/export-visual-key.sh); nothing else on the page renders.
+  var exportId = new URLSearchParams(location.search).get('board');
+  if (exportId) {
+    var target = document.getElementById(exportId);
+    if (target) {
+      document.body.classList.add('export');
+      target.closest('.board-wrap').classList.add('export-target');
+    }
+  }
+
+  // Boards are authored at a fixed 1600px so screenshots are consistent;
+  // scale each one down to fit the viewport instead of reflowing it.
+  function fitBoards() {
+    if (exportId) return;
+    document.querySelectorAll('.board-wrap').forEach(function (wrap) {
+      var board = wrap.querySelector('.board');
+      var label = wrap.querySelector('.board-label');
+      var scale = Math.min(1, wrap.clientWidth / 1600);
+      board.style.transform = 'scale(' + scale + ')';
+      var labelH = label ? label.offsetHeight + 14 : 0;
+      wrap.style.height = (board.offsetHeight * scale + labelH) + 'px';
+    });
+  }
+  window.addEventListener('resize', fitBoards);
+  window.addEventListener('load', fitBoards);
+  fitBoards();
+
+  // Copy buttons: clipboard API where allowed, execCommand fallback for file://.
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var src = document.getElementById(btn.getAttribute('data-copy'));
+      if (!src) return;
+      var text = src.textContent.trim();
+      var done = function () {
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+  function fallback(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) { /* leave the text selected */ }
+    document.body.removeChild(ta);
+  }
+</script>
+</body>
+</html>
