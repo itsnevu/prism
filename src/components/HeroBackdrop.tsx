@@ -89,7 +89,7 @@ export function HeroBackdrop() {
       <CoinPair left="3%" top="9%" width={210} />
       <Coin left="76%" top="13%" width={175} tilt={0.3} rot={4} thick={10} pale dur={11} delay={-5} />
       <Coin left="86%" top="52%" width={140} tilt={0.55} rot={-38} thick={10} dur={9} delay={-1} />
-      <Coin left="15%" top="58%" width={120} tilt={0.34} rot={-62} thick={9} dur={12} delay={-7} />
+      <Coin left="20%" top="72%" width={120} tilt={0.34} rot={-62} thick={9} dur={12} delay={-7} />
       <Coin left="69%" top="78%" width={105} tilt={0.6} rot={-18} thick={8} dur={8} delay={-2} />
       <Coin left="91%" top="82%" width={84} tilt={0.5} rot={30} thick={7} dur={10} delay={-4} pale />
     </div>

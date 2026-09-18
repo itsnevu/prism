@@ -5,6 +5,7 @@ import { erc20Abi, formatUnits, parseUnits, type Address } from "viem";
 import { useAccount, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
 import { IndexVaultAbi } from "@/lib/contracts";
+import { activeChain } from "@/lib/chain";
 import type { IndexView } from "@/lib/hooks";
 import { fmtNum, fmtUsd } from "@/lib/format";
 
@@ -77,9 +78,9 @@ export function MintRedeemForm({ ix, userBalance }: { ix: IndexView; userBalance
   }, [isSuccess, receiptError, refetch, qc, reset]);
 
   const approve = (asset: Address) =>
-    writeContract({ address: asset, abi: erc20Abi, functionName: "approve", args: [ix.vault, 2n ** 256n - 1n] });
-  const mint = () => address && writeContract({ ...vault, functionName: "mint", args: [amount, address] });
-  const redeem = () => address && writeContract({ ...vault, functionName: "redeem", args: [amount, address] });
+    writeContract({ chainId: activeChain.id, address: asset, abi: erc20Abi, functionName: "approve", args: [ix.vault, 2n ** 256n - 1n] });
+  const mint = () => address && writeContract({ ...vault, chainId: activeChain.id, functionName: "mint", args: [amount, address] });
+  const redeem = () => address && writeContract({ ...vault, chainId: activeChain.id, functionName: "redeem", args: [amount, address] });
 
   const busy = isPending || confirming;
   const allApproved = legs.every((l) => l.approved);
@@ -97,7 +98,7 @@ export function MintRedeemForm({ ix, userBalance }: { ix: IndexView; userBalance
             aria-pressed={mode === m}
             onClick={() => setMode(m)}
             className={`rounded-full px-4 py-1.5 text-[13px] font-semibold capitalize transition-colors ${
-              mode === m ? "bg-ink text-white" : "border border-line bg-field text-ink hover:bg-white"
+              mode === m ? "bg-ink text-bg" : "border border-line bg-field text-ink hover:bg-surface"
             }`}
           >
             {m}
@@ -117,7 +118,7 @@ export function MintRedeemForm({ ix, userBalance }: { ix: IndexView; userBalance
             className="tnum w-full bg-transparent font-mono text-[20px] font-semibold text-ink outline-none"
             aria-label="amount"
           />
-          <span className="rounded-full bg-white px-2.5 py-1 font-mono text-[11px] font-semibold text-ink">{ix.symbol}</span>
+          <span className="rounded-full bg-surface px-2.5 py-1 font-mono text-[11px] font-semibold text-ink">{ix.symbol}</span>
         </div>
       </label>
       <div className="mt-2 flex justify-between text-[12px] text-ink-soft">
@@ -138,7 +139,7 @@ export function MintRedeemForm({ ix, userBalance }: { ix: IndexView; userBalance
               {mode === "mint" && address && (
                 <div className="tnum font-mono text-[10.5px] text-ink-faint">
                   wallet {fmtNum(l.wallet, l.decimals, 2)}
-                  {!l.enough && l.need > 0n && <span className="text-[#b5533a]"> · insufficient</span>}
+                  {!l.enough && l.need > 0n && <span className="text-[#b3b3b3]"> · insufficient</span>}
                 </div>
               )}
             </div>
@@ -158,7 +159,7 @@ export function MintRedeemForm({ ix, userBalance }: { ix: IndexView; userBalance
                     data-testid={`approve-${l.symbol}`}
                     disabled={busy}
                     onClick={() => approve(l.asset)}
-                    className="rounded-full bg-ink px-2.5 py-0.5 text-[10.5px] font-semibold text-white transition-colors hover:bg-bezel disabled:opacity-50"
+                    className="rounded-full bg-ink px-2.5 py-0.5 text-[10.5px] font-semibold text-bg transition-colors hover:bg-bezel disabled:opacity-50"
                   >
                     approve
                   </button>
@@ -197,17 +198,17 @@ export function MintRedeemForm({ ix, userBalance }: { ix: IndexView; userBalance
         {busy ? (confirming ? "Confirming transaction" : "Waiting for wallet signature") : ""}
       </p>
       {reverted && (
-        <p className="mt-2 text-[11.5px] text-[#b5533a]">
+        <p className="mt-2 text-[11.5px] text-[#b3b3b3]">
           Transaction reverted on chain. Nothing moved — check the amounts and try again.
         </p>
       )}
       {receiptError && (
-        <p className="mt-2 break-words text-[11.5px] text-[#b5533a]">
+        <p className="mt-2 break-words text-[11.5px] text-[#b3b3b3]">
           Could not confirm the transaction: {receiptError.message.split("\n")[0].slice(0, 140)}
         </p>
       )}
       {error && (
-        <p className="mt-2 break-words text-[11.5px] text-[#b5533a]">{error.message.split("\n")[0].slice(0, 160)}</p>
+        <p className="mt-2 break-words text-[11.5px] text-[#b3b3b3]">{error.message.split("\n")[0].slice(0, 160)}</p>
       )}
       {address && userBalance !== undefined && (
         <p className="tnum mt-3 text-center font-mono text-[11.5px] text-ink-faint">

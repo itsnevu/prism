@@ -32,7 +32,7 @@ export function WalletIcon({ className = "" }: IconProps) {
 export function ChevronIcon({ className = "" }: IconProps) {
   return (
     <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className={className}>
-      <path d="M6 4 L10 8 L6 12" stroke="#97a395" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 4 L10 8 L6 12" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

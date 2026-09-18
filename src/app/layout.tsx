@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 import { Schibsted_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
+import { Reveal } from "@/components/Reveal";
+import { Motion } from "@/components/fx/Motion";
 
 const grotesk = Schibsted_Grotesk({
   variable: "--font-grotesk",
@@ -45,6 +47,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
+        <Reveal />
+        <Motion />
       </body>
     </html>
   );

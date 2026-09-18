@@ -30,7 +30,7 @@ export default function AppPage() {
           <Wordmark />
         </Link>
         <nav className="flex items-center gap-2">
-          <span className="hidden rounded-full border border-line bg-white px-3 py-1.5 text-[12.5px] font-semibold text-ink-soft sm:inline-block">
+          <span className="hidden rounded-full border border-line bg-surface px-3 py-1.5 text-[12.5px] font-semibold text-ink-soft sm:inline-block">
             {activeChain.name} · {activeChain.id}
           </span>
           <ConnectButton />
@@ -63,7 +63,7 @@ export default function AppPage() {
             {address ? (
               <>
                 <div className="tnum font-mono">{short(address)}</div>
-                {wrongChain && <div className="mt-1 text-[#ffb27a]">Switch wallet to {activeChain.name} (chain {activeChain.id})</div>}
+                {wrongChain && <div className="mt-1 text-white">Switch wallet to {activeChain.name} (chain {activeChain.id})</div>}
               </>
             ) : (
               <div>Connect a wallet to mint or redeem.</div>
@@ -79,7 +79,7 @@ export default function AppPage() {
 
       <section className={`${container} flex flex-col gap-6 pb-24`}>
         {!hasDeployment && (
-          <div className="rounded-[36px] border border-line bg-white p-10 text-center">
+          <div className="rounded-[36px] border border-line bg-surface p-10 text-center">
             <div className="text-[24px] font-bold tracking-[-0.02em] text-ink">No deployment found for {activeChain.name}</div>
             <p className="mx-auto mt-3 max-w-[520px] text-[15px] text-ink-soft">
               Run <code className="rounded bg-field px-1.5 py-0.5 font-mono text-[13px]">npm run chain</code>, then{" "}

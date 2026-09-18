@@ -6,8 +6,8 @@
  * here, not a hunt through the markup.
  */
 export const LINKS = {
-  /** No account exists yet. Set to the profile URL to show the icon. */
-  x: null as string | null,
+  x: "https://x.com/prism_capitals" as string | null,
+  /** No Telegram yet; the footer hides the icon while this is null. */
   telegram: null as string | null,
   docs: "/docs",
   blog: "/blog",
@@ -22,7 +22,7 @@ export const LINKS = {
  * Address printed on the legal pages. Point it at a mailbox that a person actually reads before
  * publishing the site — the Terms and Privacy pages both invite people to write to it.
  */
-export const CONTACT_EMAIL = "support@prism.capital";
+export const CONTACT_EMAIL = "support@prismcapitals.com";
 
 /** Block explorer link for an address, when the active chain publishes one. */
 export function explorerAddress(explorerUrl: string | undefined, address: string): string | undefined {

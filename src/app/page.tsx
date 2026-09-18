@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { LINKS } from "@/lib/links";
 import { ConnectButton } from "@/components/ConnectButton";
-import { PrismMark, Tri } from "@/components/Logo";
+import { PrismMark } from "@/components/Logo";
+import { IndexCountList, IndexTiles, IndexTape } from "@/components/LiveIndexes";
 import { ArrowIcon, TelegramIcon, XIcon } from "@/components/Icons";
 import { DashboardPhone, MintPhone, PhoneDefs } from "@/components/Phone";
 import { HeroBackdrop } from "@/components/HeroBackdrop";
@@ -62,6 +63,30 @@ function Hero() {
   );
 }
 
+/** Between the two phones: a running tape of basket marks, then the three steps in one line. */
+function Bridge() {
+  return (
+    <div className="lp-bridge">
+      <IndexTape />
+      <section className="lp-section lp-steps" aria-label="How it works">
+        <ol className="lp-col lp-steps-list">
+          {[
+            ["01", "Pick a theme", "Semis, metals or degen — one token each."],
+            ["02", "Mint with USDG", "Deliver USDG, receive the basket at NAV."],
+            ["03", "Hold or redeem", "Weights rebalance inside a band. Exit at NAV whenever."],
+          ].map(([n, t, d]) => (
+            <li key={n} className="lp-step">
+              <span className="lp-step-n">{n}</span>
+              <span className="lp-step-t">{t}</span>
+              <span className="lp-step-d lp-muted">{d}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+  );
+}
+
 function MintRedeem() {
   return (
     <div className="lp-panel-wrap">
@@ -91,12 +116,6 @@ function MintRedeem() {
   );
 }
 
-const INDEXES = [
-  { name: "SEMIS", ticker: "pSEMI", a: "8 names", b: "rebalanced monthly", color: "#7be372" },
-  { name: "METALS", ticker: "pMETL", a: "3 names", b: "silver-led", color: "#ffffff", stroke: "#394938" },
-  { name: "DEGEN", ticker: "pDGEN", a: "12 names", b: "hardest caps", color: "#394938" },
-];
-
 function Indexes() {
   return (
     <section className="lp-section lp-cards">
@@ -119,20 +138,7 @@ function Indexes() {
         </div>
       </div>
       <ul className="lp-col lp-grid">
-        {INDEXES.map((ix) => (
-          <li key={ix.name} className="lp-tile">
-            <div className="lp-art lp-art-field">
-              <Tri className="lp-art-icon" color={ix.color} stroke={ix.stroke} />
-              <span className="lp-art-tag lp-art-tag-mono">{ix.ticker}</span>
-            </div>
-            <p className="lp-caption">
-              {ix.name}{" "}
-              <span className="lp-muted">
-                {ix.a} · {ix.b}
-              </span>
-            </p>
-          </li>
-        ))}
+        <IndexTiles />
       </ul>
     </section>
   );
@@ -141,7 +147,7 @@ function Indexes() {
 const PRICING = [
   {
     figure: "Oracle-priced",
-    note: "Every leg is marked from a live feed — tokenized equities, silver and memecoins alike — so NAV is a number, not a guess.",
+    note: "Every leg is marked from a live feed — tokenized equities, silver and oil alike — so NAV is a number, not a guess.",
   },
   {
     figure: "Paused, not guessed",
@@ -164,7 +170,7 @@ function Pricing() {
             <span className="lp-muted">even when half the market is asleep.</span>
           </h2>
           <p className="lp-body lp-muted max-w-sm">
-            Equities close. Silver closes. Memecoins never sleep. Prism prices each leg from an oracle and refuses to
+            Equities close. Silver closes. Oil closes. Feeds go quiet over the weekend. Prism prices each leg from an oracle and refuses to
             quote a basket while any leg is stale.
           </p>
         </div>
@@ -184,9 +190,9 @@ function Pricing() {
 }
 
 const STATS = [
-  { figure: "1", note: "token holds the whole theme, weighted and rebalanced" },
-  { figure: "3", note: "indexes — semis, metals, degen" },
-  { figure: "0", note: "tickers to babysit — a wallet is the whole of it" },
+  { figure: "1", label: "token", note: "holds the whole theme, weighted and rebalanced", detail: ["Mint with USDG", "Redeem for the basket", "Trades at NAV"] },
+  { figure: "3", label: "indexes", note: "semis, metals, degen", detail: [] as string[], live: true },
+  { figure: "0", label: "tickers to babysit", note: "a wallet is the whole of it", detail: ["No broker", "No rebalancing chores", "No claim button"] },
 ];
 
 function Closing() {
@@ -204,7 +210,12 @@ function Closing() {
           {STATS.map((s) => (
             <li key={s.figure} className="lp-tile">
               <div className="lp-art lp-art-outline">
-                <span className="lp-figure">{s.figure}</span>
+                <span className="lp-figure">
+                  {s.figure} <span className="lp-figure-label">{s.label}</span>
+                </span>
+                <ul className="lp-detail">
+                  {"live" in s && s.live ? <IndexCountList /> : s.detail.map((d) => <li key={d}>{d}</li>)}
+                </ul>
                 <span className="lp-note">{s.note}</span>
               </div>
             </li>
@@ -222,7 +233,7 @@ function Closing() {
         <footer className="lp-col lp-footer">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2.5">
-              <PrismMark size={40} ink="#ffffff" fill="rgba(255,255,255,0.12)" />
+              <PrismMark size={40} />
               <span className="lp-wordmark text-[24px]">prism</span>
             </div>
             <p className="lp-small lp-muted max-w-md">
@@ -272,6 +283,7 @@ export default function Home() {
       <PhoneDefs />
       <Header />
       <Hero />
+      <Bridge />
       <MintRedeem />
       <Indexes />
       <Pricing />

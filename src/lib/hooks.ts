@@ -2,7 +2,9 @@
 
 import { useMemo } from "react";
 import type { Address } from "viem";
-import { useBlock, useReadContracts } from "wagmi";
+import { useBlock, usePublicClient, useReadContracts } from "wagmi";
+import { useQuery } from "@tanstack/react-query";
+
 import {
   deployment,
   hasDeployment,
@@ -226,4 +228,92 @@ function shortErr(e: Error | undefined) {
   const m = e.message.match(/StalePrice\(([^)]+)\)/);
   if (m) return `StalePrice(${short(m[1])})`;
   return e.message.split("\n")[0].slice(0, 80);
+}
+
+/* ------------------------------------------------------------------ activity (vault events) */
+
+export type ActivityKind = "mint" | "redeem" | "rebalance";
+export type ActivityItem = {
+  id: string;
+  kind: ActivityKind;
+  key: IndexKey;
+  symbol: string;
+  /** index tokens moved (mint/redeem), 1e18 */
+  amount: bigint | undefined;
+  /** rebalance: sold → bought asset symbols */
+  sold?: string;
+  bought?: string;
+  blockNumber: bigint;
+  timestamp: number | undefined;
+};
+
+/**
+ * Recent vault activity read straight from logs: MintedWithUSDG / RedeemedForUSDG /
+ * Rebalanced across every deployed vault, newest first. Polls with the block watcher so a
+ * fresh mint shows up within a block or two. Empty (not fake) when no deployment is reachable.
+ */
+export function useActivity(limit = 8): { items: ActivityItem[]; isLoading: boolean } {
+  const client = usePublicClient();
+  const { data: block } = useBlock({ watch: true, query: { enabled: hasDeployment } });
+  const ixs = useMemo(() => deployment?.indexes ?? [], []);
+  const assetSymbol = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const ix of ixs) ix.assets.forEach((a, i) => m.set(a.toLowerCase(), ix.assetSymbols[i] ?? short(a)));
+    return m;
+  }, [ixs]);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["activity", block?.number?.toString() ?? "0", limit],
+    enabled: hasDeployment && !!client && !!block,
+    staleTime: 5_000,
+    queryFn: async () => {
+      if (!client) return [];
+      const latest = block?.number ?? 0n;
+      // Local chains are short; on a long chain only scan the last ~50k blocks per refresh.
+      const fromBlock = latest > 50_000n ? latest - 50_000n : 0n;
+      const out: ActivityItem[] = [];
+      const blocks = new Map<bigint, number>();
+      const tsOf = async (n: bigint) => {
+        const hit = blocks.get(n);
+        if (hit !== undefined) return hit;
+        const b = await client.getBlock({ blockNumber: n });
+        blocks.set(n, Number(b.timestamp));
+        return Number(b.timestamp);
+      };
+      for (const ix of ixs) {
+        const logs = await client.getContractEvents({
+          address: ix.vault,
+          abi: IndexVaultAbi,
+          fromBlock,
+          toBlock: latest,
+        });
+        for (const l of logs) {
+          const name = l.eventName as string;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const a = l.args as any;
+          let item: ActivityItem | undefined;
+          if (name === "MintedWithUSDG") item = { id: `${l.transactionHash}:${l.logIndex}`, kind: "mint", key: ix.key, symbol: ix.key, amount: a.indexAmount, blockNumber: l.blockNumber, timestamp: undefined };
+          else if (name === "RedeemedForUSDG") item = { id: `${l.transactionHash}:${l.logIndex}`, kind: "redeem", key: ix.key, symbol: ix.key, amount: a.indexAmount, blockNumber: l.blockNumber, timestamp: undefined };
+          else if (name === "Rebalanced") item = { id: `${l.transactionHash}:${l.logIndex}`, kind: "rebalance", key: ix.key, symbol: ix.key, amount: undefined, sold: assetSymbol.get(String(a.sold).toLowerCase()), bought: assetSymbol.get(String(a.bought).toLowerCase()), blockNumber: l.blockNumber, timestamp: undefined };
+          if (item) out.push(item);
+        }
+      }
+      out.sort((x, y) => (y.blockNumber > x.blockNumber ? 1 : y.blockNumber < x.blockNumber ? -1 : 0));
+      const top = out.slice(0, limit);
+      for (const it of top) it.timestamp = await tsOf(it.blockNumber);
+      return top;
+    },
+  });
+
+  return { items: data ?? [], isLoading };
+}
+
+/** "Just now", "4 min ago", "Tue" — relative to the latest block, not the wall clock. */
+export function relTime(ts: number | undefined, now: number | undefined) {
+  if (ts === undefined || !now) return "—";
+  const d = Math.max(0, now - ts);
+  if (d < 60) return "Just now";
+  if (d < 3600) return `${Math.floor(d / 60)} min ago`;
+  if (d < 86_400) return `${Math.floor(d / 3600)} h ago`;
+  return new Date(ts * 1000).toLocaleDateString("en-US", { weekday: "short" });
 }

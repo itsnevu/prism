@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { erc20Abi, parseUnits } from "viem";
-import { useAccount, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useAccount, useReadContracts, useSwitchChain, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
 import { IndexVaultAbi, deployment } from "@/lib/contracts";
+import { activeChain } from "@/lib/chain";
 import type { IndexView } from "@/lib/hooks";
 import { fmtNum, fmtUsd } from "@/lib/format";
 
@@ -27,7 +28,12 @@ const MAX_UINT = 2n ** 256n - 1n;
  * bad fill reverts instead of silently costing the user.
  */
 export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigint | undefined }) {
-  const { address } = useAccount();
+  // `chainId` is undefined when the wallet sits on a chain wagmi does not know (e.g. Ethereum mainnet).
+  // Wallets remember a chain per site, so route every action through a switch when it is parked elsewhere.
+  const { address, chainId: walletChainId } = useAccount();
+  const { switchChain, isPending: switching } = useSwitchChain();
+  const wrongChain = !!address && walletChainId !== activeChain.id;
+  const switchToActive = () => switchChain({ chainId: activeChain.id });
   const qc = useQueryClient();
   const usdg = deployment?.usdg;
   const [side, setSide] = useState<Side>("buy");
@@ -102,11 +108,11 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
   const quoteFailed = data?.[0]?.status === "failure";
 
   const approve = () =>
-    usdg && writeContract({ address: usdg, abi: erc20Abi, functionName: "approve", args: [ix.vault, MAX_UINT] });
+    usdg && writeContract({ chainId: activeChain.id, address: usdg, abi: erc20Abi, functionName: "approve", args: [ix.vault, MAX_UINT] });
   const submit = () => {
     if (!address) return;
-    if (side === "buy") writeContract({ ...vault, functionName: "mintWithUSDG", args: [amount, minOut, address] });
-    else writeContract({ ...vault, functionName: "redeemForUSDG", args: [amount, minOut, address] });
+    if (side === "buy") writeContract({ ...vault, chainId: activeChain.id, functionName: "mintWithUSDG", args: [amount, minOut, address] });
+    else writeContract({ ...vault, chainId: activeChain.id, functionName: "redeemForUSDG", args: [amount, minOut, address] });
   };
 
   if (!usdg) return null;
@@ -131,7 +137,7 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
                 setRaw(s === "buy" ? "100" : "1");
               }}
               className={`rounded-full px-4 py-1.5 text-[13px] font-semibold capitalize transition-colors ${
-                side === s ? "bg-ink text-white" : "border border-line bg-field text-ink hover:bg-white"
+                side === s ? "bg-ink text-bg" : "border border-line bg-field text-ink hover:bg-surface"
               }`}
             >
               {s}
@@ -155,7 +161,7 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
             className="tnum w-full bg-transparent font-mono text-[20px] font-semibold text-ink outline-none"
             aria-label={side === "buy" ? "USDG amount" : "index amount"}
           />
-          <span className="rounded-full bg-white px-2.5 py-1 font-mono text-[11px] font-semibold text-ink">{inSymbol}</span>
+          <span className="rounded-full bg-surface px-2.5 py-1 font-mono text-[11px] font-semibold text-ink">{inSymbol}</span>
         </div>
       </label>
 
@@ -171,7 +177,7 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
                   ? `${fmtNum(usdgBalance, usdgDecimals, 2)} USDG`
                   : `${fmtNum(userBalance, 18, 4)} ${ix.symbol}`}
               </span>
-              {!enough && amount > 0n && <span className="text-[#b5533a]"> · insufficient</span>}
+              {!enough && amount > 0n && <span className="text-[#b3b3b3]"> · insufficient</span>}
             </>
           ) : (
             "Connect a wallet to trade."
@@ -201,7 +207,7 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
                 aria-pressed={slippageBps === bps}
                 onClick={() => setSlippageBps(bps)}
                 className={`tnum rounded-full px-2.5 py-0.5 font-mono text-[11px] font-semibold transition-colors ${
-                  slippageBps === bps ? "bg-ink text-white" : "bg-white text-ink-soft hover:text-ink"
+                  slippageBps === bps ? "bg-ink text-bg" : "bg-surface text-ink-soft hover:text-ink"
                 }`}
               >
                 {bps / 100}%
@@ -214,12 +220,21 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
         </div>
       </div>
 
-      {needsApproval ? (
+      {wrongChain ? (
+        <button
+          type="button"
+          disabled={switching}
+          onClick={switchToActive}
+          className="mt-4 w-full rounded-full bg-ink py-3 text-[15px] font-semibold text-bg transition-colors hover:bg-bezel disabled:opacity-50"
+        >
+          {switching ? "Switching…" : `Switch to `}
+        </button>
+      ) : needsApproval ? (
         <button
           type="button"
           disabled={busy}
           onClick={approve}
-          className="mt-4 w-full rounded-full bg-ink py-3 text-[15px] font-semibold text-white transition-colors hover:bg-bezel disabled:opacity-50"
+          className="mt-4 w-full rounded-full bg-ink py-3 text-[15px] font-semibold text-bg transition-colors hover:bg-bezel disabled:opacity-50"
         >
           {busy ? "Approving…" : "Approve USDG"}
         </button>
@@ -255,17 +270,17 @@ export function UsdgForm({ ix, userBalance }: { ix: IndexView; userBalance: bigi
         {busy ? (confirming ? "Confirming transaction" : "Waiting for wallet signature") : ""}
       </p>
       {reverted && (
-        <p className="mt-2 text-[11.5px] text-[#b5533a]">
+        <p className="mt-2 text-[11.5px] text-[#b3b3b3]">
           Transaction reverted on chain — most likely the fill came in under your slippage floor.
           Nothing moved; widen the tolerance or try again.
         </p>
       )}
       {receiptError && (
-        <p className="mt-2 break-words text-[11.5px] text-[#b5533a]">
+        <p className="mt-2 break-words text-[11.5px] text-[#b3b3b3]">
           Could not confirm the transaction: {receiptError.message.split("\n")[0].slice(0, 140)}
         </p>
       )}
-      {error && <p className="mt-2 break-words text-[11.5px] text-[#b5533a]">{error.message.split("\n")[0].slice(0, 160)}</p>}
+      {error && <p className="mt-2 break-words text-[11.5px] text-[#b3b3b3]">{error.message.split("\n")[0].slice(0, 160)}</p>}
       <p className="mt-3 text-center text-[11px] text-ink-faint">
         USDG is split across the basket by target weight, so buying also nudges the index back on target.
       </p>

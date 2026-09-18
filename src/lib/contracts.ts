@@ -36,7 +36,7 @@ export type Deployment = {
 
 const INDEX_NAMES: Record<IndexKey, string> = {
   pSEMI: "SEMIS",
-  pMETL: "METALS",
+  pMETL: "COMMODITIES",
   pDGEN: "DEGEN",
 };
 

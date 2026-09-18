@@ -1,7 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useIndexes } from "@/lib/hooks";
+import { useAccount } from "wagmi";
+import { useBlock } from "wagmi";
+import { relTime, useActivity, useIndexes, useUserIndexBalances, type ActivityItem } from "@/lib/hooks";
+import { fmtNum, fmtPct, fmtUsd, short } from "@/lib/format";
 import { PrismMark, Tri } from "./Logo";
 import { CardIcon, ChevronIcon, ClockIcon, GridIcon, PlusIcon, WalletIcon } from "./Icons";
 
@@ -75,7 +78,7 @@ export function IPhone({ children, className = "" }: { children: ReactNode; clas
   );
 }
 
-function AppHead() {
+function AppHead({ address }: { address?: `0x${string}` }) {
   return (
     <div className="ip-head">
       <span className="ip-lockup">
@@ -88,7 +91,7 @@ function AppHead() {
         <span>
           <WalletIcon />
         </span>
-        0x7bE3…72Cf
+        {address ? short(address) : "Not connected"}
       </span>
     </div>
   );
@@ -118,105 +121,111 @@ function Dock({ active }: { active: "baskets" | "activity" }) {
 }
 
 const INDEX_COLORS: Record<string, string> = {
-  SEMIS: "#7be372",
-  METALS: "#97a395",
-  DEGEN: "#394938",
+  SEMIS: "#e6e6e6",
+  COMMODITIES: "#8a8a8a",
+  DEGEN: "#3a3a3a",
 };
 
-const BASKETS = [
-  { name: "SEMIS", sub: "8 names", qty: "4.2", unit: "pSEMI", usd: "$712.40", chg: "+3.1%", up: true },
-  { name: "METALS", sub: "3 names", qty: "11.8", unit: "pMETL", usd: "$391.60", chg: "+0.8%", up: true },
-  { name: "DEGEN", sub: "12 names", qty: "940", unit: "pDGEN", usd: "$180.20", chg: "−6.4%", up: false, hi: true },
-];
+/** Latest block timestamp — activity ages are measured against chain time, not the wall clock. */
+function useNow() {
+  const { data } = useBlock({ watch: true });
+  return data ? Number(data.timestamp) : undefined;
+}
 
+const LABEL: Record<string, string> = { pSEMI: "SEMIS", pMETL: "COMMODITIES", pDGEN: "DEGEN" };
+
+function ActivityRow({ it, now }: { it: ActivityItem; now: number | undefined }) {
+  const label = LABEL[it.key] ?? it.key;
+  const title =
+    it.kind === "mint" ? `Minted ${it.symbol}` : it.kind === "redeem" ? `Redeemed ${it.symbol}` : `Rebalanced ${label}`;
+  const sub = it.kind === "rebalance" ? "Band trigger" : `${fmtNum(it.amount, 18, 2)} ${it.symbol}`;
+  const right = it.kind === "rebalance" ? `${it.sold ?? "?"}→${it.bought ?? "?"}` : `${it.kind === "mint" ? "+" : "−"}${fmtNum(it.amount, 18, 1)}`;
+  return (
+    <div className="ip-row ip-row-sm">
+      <span className="ip-tile">
+        <Tri color={INDEX_COLORS[label]} />
+      </span>
+      <span className="ip-row-main">
+        <span className="ip-row-name">{title}</span>
+        <span className="ip-row-sub">{sub}</span>
+      </span>
+      <span className="ip-row-amount">
+        <span className="ip-row-count">
+          <span className="ip-mark" />
+          {right}
+        </span>
+        <span className="ip-row-money">{relTime(it.timestamp, now)}</span>
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Dashboard screen. With a connected wallet the rows are that wallet's holdings; without one
+ * they are the vaults themselves (supply and value), which is the only honest number to show.
+ */
 export function DashboardPhone() {
   const { indexes, hasDeployment } = useIndexes();
+  const { address } = useAccount();
+  const { byKey } = useUserIndexBalances(address);
+  const { items: activity } = useActivity(2);
+  const now = useNow();
 
-  // The holding sizes are illustrative, but when a deployment is reachable the per-token
-  // value and the name count come from the chain, so the totals are real NAV maths.
-  const bySymbol = new Map(indexes.map((i) => [i.symbol, i]));
-  const baskets = BASKETS.map((b) => {
-    const live = hasDeployment ? bySymbol.get(b.unit) : undefined;
-    if (!live || live.nav === undefined) return b;
-    const value = (Number(b.qty.replace(/,/g, "")) * Number(live.nav)) / 1e18;
-    return {
-      ...b,
-      sub: `${live.components.length} names`,
-      usd: `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-    };
+  const mine = !!address;
+  const rows = indexes.map((ix) => {
+    const qty = mine ? byKey[ix.key] : ix.totalSupply;
+    const usd = qty !== undefined && ix.nav !== undefined ? (qty * ix.nav) / 10n ** 18n : undefined;
+    const status = ix.paused ? "paused" : ix.halted ? "stale" : ix.rebalanceNeeded ? "rebalance due" : "in band";
+    return { ix, qty, usd, status, down: ix.paused || ix.halted, label: LABEL[ix.key] ?? ix.key };
   });
-
-  const total = baskets.reduce((acc, b) => acc + Number(b.usd.replace(/[$,]/g, "")), 0);
+  const total = rows.reduce((acc, r) => acc + (r.usd ?? 0n), 0n);
+  const known = rows.some((r) => r.usd !== undefined);
 
   return (
     <IPhone>
-      <AppHead />
+      <AppHead address={address} />
       <div className="ip-body">
         <div>
-          <p className="ip-label">Your baskets</p>
-          <p className="ip-total">
-            ${total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </p>
-          <p className="ip-sub">{baskets.length} indexes</p>
+          <p className="ip-label">{mine ? "Your baskets" : "All baskets"}</p>
+          <p className="ip-total">{hasDeployment && known ? fmtUsd(total) : "—"}</p>
+          <p className="ip-sub">{hasDeployment ? `${indexes.length} indexes` : "no network"}</p>
         </div>
 
         <div className="ip-card">
-          {baskets.map((b) => (
-            <div key={b.name} className={`ip-row${b.hi ? " ip-row-hi" : ""}`}>
+          {rows.map((r) => (
+            <div key={r.ix.key} className={`ip-row${r.down ? " ip-row-hi" : ""}`}>
               <span className="ip-tile">
-                <Tri color={INDEX_COLORS[b.name]} />
+                <Tri color={INDEX_COLORS[r.label]} />
               </span>
               <span className="ip-row-main">
-                <span className="ip-row-name">{b.name}</span>
-                <span className="ip-row-sub">{b.sub}</span>
+                <span className="ip-row-name">{r.label}</span>
+                <span className="ip-row-sub">{r.ix.components.length} names</span>
               </span>
               <span className="ip-row-amount">
                 <span className="ip-row-big">
-                  {b.qty} <small>{b.unit}</small>
+                  {fmtNum(r.qty, 18, 2)} <small>{r.ix.symbol}</small>
                 </span>
                 <span className="ip-row-money">
-                  {b.usd} <span className={b.up ? "ip-up" : "ip-down"}>{b.chg}</span>
+                  {fmtUsd(r.usd)} <span className={r.down ? "ip-down" : "ip-up"}>{r.status}</span>
                 </span>
               </span>
               <ChevronIcon className="ip-chevron" />
             </div>
           ))}
+          {hasDeployment && rows.length === 0 && <div className="ip-row ip-row-sm"><span className="ip-row-sub">Loading vaults…</span></div>}
         </div>
 
         <div className="ip-card">
           <p className="ip-card-head">Activity</p>
-          <div className="ip-row ip-row-sm">
-            <span className="ip-tile">
-              <Tri color={INDEX_COLORS.SEMIS} />
-            </span>
-            <span className="ip-row-main">
-              <span className="ip-row-name">Rebalanced SEMIS</span>
-              <span className="ip-row-sub">Band trigger</span>
-            </span>
-            <span className="ip-row-amount">
-              <span className="ip-row-count">
-                <span className="ip-mark" />
-                NVDA 22%→20%
+          {activity.length === 0 ? (
+            <div className="ip-row ip-row-sm">
+              <span className="ip-row-main">
+                <span className="ip-row-sub">{hasDeployment ? "No mints, redeems or rebalances yet" : "Connect a network"}</span>
               </span>
-              <span className="ip-row-money">Today</span>
-            </span>
-          </div>
-          <div className="ip-row ip-row-sm">
-            <span className="ip-tile">
-              <Tri color={INDEX_COLORS.SEMIS} />
-            </span>
-            <span className="ip-row-main">
-              <span className="ip-row-name">Minted pSEMI</span>
-              <span className="ip-row-sub">1,000 USDG</span>
-            </span>
-            <span className="ip-row-amount">
-              <span className="ip-row-count">
-                <span className="ip-mark" />
-                +4.2
-              </span>
-              <span className="ip-row-money">Tue</span>
-            </span>
-          </div>
+            </div>
+          ) : (
+            activity.map((it) => <ActivityRow key={it.id} it={it} now={now} />)
+          )}
         </div>
       </div>
       <Dock active="baskets" />
@@ -224,25 +233,29 @@ export function DashboardPhone() {
   );
 }
 
-const COMPOSITION: [string, number][] = [
-  ["NVDA", 20],
-  ["AMD", 11],
-  ["AVGO", 14],
-  ["TSM", 16],
-  ["ASML", 10],
-  ["MU", 9],
-  ["QCOM", 10],
-  ["INTC", 10],
-];
-
+/** Mint screen for pSEMI: a 1,000 USDG quote priced off live NAV and the mint fee, plus live composition. */
 export function MintPhone() {
+  const { indexes, hasDeployment } = useIndexes();
+  const { address } = useAccount();
+  const { items: activity } = useActivity(1);
+  const now = useNow();
+  const ix = indexes.find((i) => i.key === "pSEMI") ?? indexes[0];
+  // 1,000 USDG expressed in 1e18 USD like nav(); token decimals do not enter this quote.
+  const IN_USD = 1_000n * 10n ** 18n;
+  const out =
+    ix && ix.nav !== undefined && ix.nav > 0n
+      ? (((IN_USD * BigInt(10_000 - ix.mintFeeBps)) / 10_000n) * 10n ** 18n) / ix.nav
+      : undefined;
+  const comp = ix ? [...ix.components].sort((a, b) => b.targetBps - a.targetBps) : [];
+  const last = activity[0];
+
   return (
     <IPhone>
-      <AppHead />
+      <AppHead address={address} />
       <div className="ip-body">
         <div>
           <p className="ip-back">‹ Baskets</p>
-          <p className="ip-title">Mint pSEMI</p>
+          <p className="ip-title">Mint {ix?.symbol ?? "—"}</p>
         </div>
 
         <div className="ip-card">
@@ -255,42 +268,47 @@ export function MintPhone() {
             </span>
             <span className="ip-chip">USDG</span>
           </div>
-        </div>
-
-        <div className="ip-card">
-          <p className="ip-card-head">Basket composition</p>
-          <div className="ip-comp">
-            {COMPOSITION.map(([t, w]) => (
-              <div key={t}>
-                <span className="ip-comp-row">
-                  <span>{t}</span>
-                  <span>{w}%</span>
-                </span>
-                <span className="ip-bar">
-                  <span style={{ width: `${w * 4}%` }} />
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="ip-card">
           <div className="ip-row">
-            <span className="ip-tile ip-tile-ink">
-              <Tri color="#7be372" />
-            </span>
             <span className="ip-row-main">
-              <span className="ip-row-name">Minted 4.2 pSEMI</span>
-              <span className="ip-row-sub">NAV $238.10</span>
-            </span>
-            <span className="ip-row-amount">
-              <span className="ip-row-count">
-                <span className="ip-mark" />
-                +4.2
+              <span className="ip-row-sub">You receive · NAV {ix ? fmtUsd(ix.nav) : "—"}{ix ? ` · ${fmtPct(ix.mintFeeBps, 2)} fee` : ""}</span>
+              <span className="ip-row-big ip-row-big-left">
+                {out === undefined ? "—" : fmtNum(out, 18, 3)} <small>{ix?.symbol ?? ""}</small>
               </span>
-              <span className="ip-row-money">Just now</span>
             </span>
           </div>
+        </div>
+
+        <div className="ip-card">
+          <p className="ip-card-head">Basket composition{ix && ix.totalValue > 0n ? " · live" : " · target"}</p>
+          <div className="ip-comp">
+            {comp.length === 0 && <span className="ip-row-sub">{hasDeployment ? "Loading…" : "Connect a network"}</span>}
+            {comp.map((c) => {
+              const w = ix && ix.totalValue > 0n ? c.weightBps : c.targetBps;
+              return (
+                <div key={c.asset}>
+                  <span className="ip-comp-row">
+                    <span>{c.symbol}</span>
+                    <span>{fmtPct(w, 0)}</span>
+                  </span>
+                  <span className="ip-bar">
+                    <span style={{ width: `${Math.min(100, (w / 10_000) * 400)}%` }} />
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="ip-card">
+          {last ? (
+            <ActivityRow it={last} now={now} />
+          ) : (
+            <div className="ip-row ip-row-sm">
+              <span className="ip-row-main">
+                <span className="ip-row-sub">{hasDeployment ? "No activity yet — be the first mint" : "Connect a network"}</span>
+              </span>
+            </div>
+          )}
         </div>
       </div>
       <Dock active="activity" />

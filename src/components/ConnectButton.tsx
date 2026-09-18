@@ -21,7 +21,7 @@ export function ConnectButton({ className = "", label = "Connect wallet" }: Conn
 
   const base =
     className ||
-    "rounded-full bg-ink px-5 py-2.5 text-[15px] font-semibold text-white hover:bg-bezel disabled:opacity-60";
+    "rounded-full bg-ink px-5 py-2.5 text-[15px] font-semibold text-bg hover:bg-bezel disabled:opacity-60";
 
   if (!mounted) {
     return (
@@ -34,7 +34,7 @@ export function ConnectButton({ className = "", label = "Connect wallet" }: Conn
   if (isConnected && address) {
     return (
       <span className="inline-flex items-center gap-1.5">
-        <span className="tnum rounded-full border border-line bg-white px-3.5 py-2 font-mono text-[13.5px] font-medium text-ink">
+        <span className="tnum rounded-full border border-line bg-surface px-3.5 py-2 font-mono text-[13.5px] font-medium text-ink">
           {short(address)}
         </span>
         <button

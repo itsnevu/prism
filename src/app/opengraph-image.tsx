@@ -12,8 +12,8 @@ export const contentType = "image/png";
  * the shapes carry the identity more than the typeface does.
  */
 export default function OpengraphImage() {
-  const ink = "#394938";
-  const green = "#7be372";
+  const ink = "#f2f2f2";
+  const green = "#d9d9d9";
 
   return new ImageResponse(
     (
@@ -24,7 +24,7 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#fafafa",
+          background: "#000000",
           padding: "72px 80px",
           fontFamily: "sans-serif",
         }}
@@ -33,9 +33,9 @@ export default function OpengraphImage() {
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <svg width="88" height="88" viewBox="0 0 44 44" fill="none">
             <path d="M3 23H14" stroke={ink} strokeWidth="2.6" strokeLinecap="round" />
-            <path d="M22 7 L35 33 H9 Z" fill="#edf6eb" stroke={ink} strokeWidth="2.6" strokeLinejoin="round" />
+            <path d="M22 7 L35 33 H9 Z" fill="#1a1a1a" stroke={ink} strokeWidth="2.6" strokeLinejoin="round" />
             <path d="M27 17 L41 9" stroke={green} strokeWidth="2.8" strokeLinecap="round" />
-            <path d="M29 21 L43 21" stroke="#6ed964" strokeWidth="2.8" strokeLinecap="round" />
+            <path d="M29 21 L43 21" stroke="#8a8a8a" strokeWidth="2.8" strokeLinecap="round" />
             <path d="M27 25 L41 33" stroke={ink} strokeWidth="2.8" strokeLinecap="round" />
           </svg>
           <span style={{ fontSize: 52, fontWeight: 600, letterSpacing: "-0.02em", color: ink }}>prism</span>
@@ -59,7 +59,7 @@ export default function OpengraphImage() {
               fontWeight: 700,
               letterSpacing: "-0.035em",
               lineHeight: 1.02,
-              color: "#97a395",
+              color: "#8a8a8a",
             }}
           >
             The whole theme.
@@ -69,10 +69,10 @@ export default function OpengraphImage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
           <div style={{ display: "flex", height: 6, width: "100%" }}>
             <div style={{ flex: 3, background: green }} />
-            <div style={{ flex: 2, background: "#6ed964" }} />
+            <div style={{ flex: 2, background: "#4d4d4d" }} />
             <div style={{ flex: 1, background: ink }} />
           </div>
-          <span style={{ fontSize: 27, color: "#596557", letterSpacing: "-0.01em" }}>
+          <span style={{ fontSize: 27, color: "#a1a1a1", letterSpacing: "-0.01em" }}>
             Tokenized index baskets, redeemable at NAV — and paused rather than priced when a market
             is shut.
           </span>

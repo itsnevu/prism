@@ -7,7 +7,7 @@ import { fmtNum, fmtPct, fmtUsd, short } from "@/lib/format";
 import { MintRedeemForm } from "./MintRedeemForm";
 import { UsdgForm } from "./UsdgForm";
 
-const COLORS: Record<string, string> = { pSEMI: "#7be372", pMETL: "#6ed964", pDGEN: "#394938" };
+const COLORS: Record<string, string> = { pSEMI: "#e6e6e6", pMETL: "#8a8a8a", pDGEN: "#3a3a3a" };
 
 type Route = "usdg" | "basket";
 
@@ -18,8 +18,8 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
   return (
     <section data-testid={`index-${ix.key}`} className="rounded-[36px] bg-field p-6 sm:p-8">
       {(ix.halted || ix.paused) && (
-        <div className="mb-5 flex items-start gap-3 rounded-2xl border border-[#e7c9a3] bg-[#fff4e6] px-4 py-3 text-[13.5px] text-[#7a4a1d]">
-          <span className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full bg-[#e08a3c]" />
+        <div className="mb-5 flex items-start gap-3 rounded-2xl border border-line bg-field px-4 py-3 text-[13.5px] text-ink-soft">
+          <span className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full bg-ink" />
           <div>
             <div className="font-semibold">
               {ix.paused ? "Paused by owner." : "Mint & redeem paused — stale price."}
@@ -37,7 +37,7 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
         <div>
           <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
             <div className="flex items-center gap-4">
-              <Tri size={40} color={COLORS[ix.key] ?? "#7be372"} />
+              <Tri size={40} color={COLORS[ix.key] ?? "#e6e6e6"} />
               <div>
                 <div className="text-[30px] leading-none font-bold tracking-[-0.03em] text-ink sm:text-[34px]">
                   {ix.name}
@@ -52,7 +52,7 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
                 NAV / token
               </div>
               <div className="tnum font-mono text-[28px] font-semibold leading-none tracking-tight text-ink">
-                {ix.nav !== undefined ? fmtUsd(ix.nav) : <span className="text-[#b5533a] text-[16px]">{ix.navError ?? "—"}</span>}
+                {ix.nav !== undefined ? fmtUsd(ix.nav) : <span className="text-[#b3b3b3] text-[16px]">{ix.navError ?? "—"}</span>}
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
                       ) : (
                         <>
                           <span className="text-ink-faint">target {fmtPct(c.targetBps)}</span>
-                          <span className={outOfBand ? "text-[#b5533a]" : "text-ink-faint"}>
+                          <span className={outOfBand ? "text-[#b3b3b3]" : "text-ink-faint"}>
                             {drift > 0 ? "+" : "−"}
                             {fmtPct(Math.abs(drift))}
                           </span>
@@ -117,7 +117,7 @@ export function IndexCard({ ix, userBalance }: { ix: IndexView; userBalance: big
                     <div className="tnum font-mono text-[13px] font-medium text-ink">{fmtUsd(c.price)}</div>
                     <span
                       className={`mt-0.5 inline-block rounded-full px-2 py-[1px] text-[10px] font-semibold ${
-                        c.fresh ? "bg-[#e3f7e0] text-[#2f7a2a]" : "bg-[#fde8e3] text-[#b5533a]"
+                        c.fresh ? "bg-ink text-bg" : "bg-field text-ink-faint"
                       }`}
                       title={c.ageSec !== undefined ? `updated ${fmtAge(c.ageSec)} ago (chain time)` : ""}
                     >

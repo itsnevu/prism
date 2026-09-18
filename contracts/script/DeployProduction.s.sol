@@ -7,6 +7,7 @@ import {IndexFactory} from "../src/IndexFactory.sol";
 import {VaultDeployer} from "../src/VaultDeployer.sol";
 import {IPriceOracle} from "../src/interfaces/IPriceOracle.sol";
 import {ProductionConfig} from "./config/ProductionConfig.sol";
+import {UniswapV3SwapExecutor} from "../src/adapters/UniswapV3SwapExecutor.sol";
 
 /// @notice Real-network deployment. Deploys nothing but the factory and the vaults — USDG, the
 ///         oracle and the swap venue must already exist on the chain and are read from
@@ -107,6 +108,12 @@ contract DeployProduction is Script, ProductionConfig {
         });
 
         IndexVault vault = IndexVault(factory.createIndex(PROTOCOL_OWNER, cfg));
+        // The executor only fills trades for registered vaults; the deployer owns it (DeployInfra).
+        UniswapV3SwapExecutor(SWAP_EXECUTOR).setVault(address(vault), true);
+        // Vault owner is PROTOCOL_OWNER; when that is the deployer, wire the keeper here too.
+        if (PROTOCOL_OWNER == vm.addr(vm.envUint("PRIVATE_KEY")) && KEEPER != address(0)) {
+            vault.setKeeper(KEEPER, true);
+        }
         console.log(ix.symbol, "vault", address(vault));
         console.log(ix.symbol, "token", address(vault.token()));
 

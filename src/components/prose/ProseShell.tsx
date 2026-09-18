@@ -36,7 +36,7 @@ export function ProseShell({ children, active }: { children: ReactNode; active?:
             </span>
             <Link
               href={LINKS.app}
-              className="rounded-full bg-ink px-4 py-2 text-[14px] font-semibold whitespace-nowrap text-white transition-colors hover:bg-bezel sm:ml-1.5"
+              className="rounded-full bg-ink px-4 py-2 text-[14px] font-semibold whitespace-nowrap text-bg transition-colors hover:bg-bezel sm:ml-1.5"
             >
               Open app
             </Link>

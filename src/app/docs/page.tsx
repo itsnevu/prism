@@ -47,7 +47,7 @@ export default function DocsIndex() {
           </p>
           <Link
             href="/whitepaper"
-            className="mt-4 inline-flex rounded-full bg-ink px-4 py-2 text-[14px] font-semibold text-white hover:bg-bezel"
+            className="mt-4 inline-flex rounded-full bg-ink px-4 py-2 text-[14px] font-semibold text-bg hover:bg-bezel"
           >
             Read the whitepaper
           </Link>
