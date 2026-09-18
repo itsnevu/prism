@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>KV09 Mint / Redeem at NAV</title><link rel="stylesheet" href="kv.css"><style>html,body{width:1920px;height:1080px}</style></head><body><div class="kv">
+<div class="bg"><span class="glass-base"></span><span class="glass-bloom"></span><span class="glass-relief"></span></div>
+<div style="position:absolute;inset:0;z-index:1;display:grid;grid-template-columns:1fr 1.15fr;padding:80px 96px;gap:80px;align-items:center">
+  <div style="display:flex;flex-direction:column;gap:36px;align-self:stretch;justify-content:space-between">
+    <div class="brand"><img src="assets/prismlogo.png" width="56" height="56" alt=""><span class="wordmark" style="font-size:32px">prism</span></div>
+    <div>
+      <h1 class="head" style="font-size:84px">Mint the basket.<br><span class="muted">Redeem the basket.</span></h1>
+      <p class="body" style="font-size:24px;max-width:600px;margin-top:32px">If the token trades above what it holds, minting is profitable. Below, redeeming is. Arbitrage drags price to NAV — the peg is defended by everyone who wants free money, not by us.</p>
+    </div>
+    <span class="pill pill-surface" style="align-self:flex-start">See how it works →</span>
+  </div>
+  <div class="art art-outline" style="padding:56px;aspect-ratio:1.15;justify-content:space-between">
+    <div style="display:flex;justify-content:space-between" class="eyebrow"><span>price vs NAV</span><span>pSEMI</span></div>
+    <svg viewBox="0 0 800 420" overflow="visible" style="width:100%;height:auto" fill="none">
+      <line x1="0" y1="210" x2="800" y2="210" stroke="#f2f2f2" stroke-width="2" stroke-dasharray="6 8"/>
+      <text x="0" y="196" fill="#a1a1a1" font-family="Geist Mono" font-size="20">NAV</text>
+      <path d="M0 250 C120 140 200 60 300 110 S420 330 520 360 S680 200 800 190" stroke="#e6e6e6" stroke-width="4" stroke-linecap="round"/>
+      <g font-family="Geist Mono" font-size="20" fill="#f2f2f2">
+        <text x="230" y="60">above NAV → mint</text><path d="M300 108 L300 205" stroke="#a1a1a1" stroke-width="2" marker-end="url(#a)"/>
+        <text x="470" y="405">below NAV → redeem</text><path d="M520 358 L520 216" stroke="#a1a1a1" stroke-width="2"/>
+      </g>
+      <circle cx="300" cy="110" r="9" fill="#ffffff"/><circle cx="520" cy="360" r="9" fill="#7a7a7a"/><circle cx="788" cy="191" r="9" fill="#f2f2f2"/>
+    </svg>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="art art-surface" style="padding:24px;border-radius:20px"><div class="eyebrow">Mint</div><div class="figure" style="font-size:32px;margin-top:8px">USDG → basket</div></div>
+      <div class="art art-surface" style="padding:24px;border-radius:20px"><div class="eyebrow">Redeem</div><div class="figure" style="font-size:32px;margin-top:8px">basket → USDG</div></div>
+    </div>
+  </div>
+</div>
+</div></body></html>
